@@ -10,7 +10,7 @@ import org.springframework.web.client.RestTemplate
 class RestTemplateConfig {
 
     @Bean
-    private fun restTemplate(): RestTemplate {
+    fun restTemplate(): RestTemplate {
         val httpClient = HttpClientBuilder.create()
                 .setMaxConnTotal(100)
                 .setMaxConnPerRoute(25)

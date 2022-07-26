@@ -1,7 +1,8 @@
 package com.yaincoding.yaco_fashion.service.elasticsearch.goods
 
+import com.yaincoding.yaco_fashion.document.goods.GoodsDocumentParser
 import com.yaincoding.yaco_fashion.dto.goods.GetGoodsResponseDto
-import com.yaincoding.yaco_fashion.dto.goods.SearchResponseDto
+import com.yaincoding.yaco_fashion.dto.goods.SearchGoodsResponseDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.http.HttpEntity
@@ -16,20 +17,24 @@ import java.net.URI
 class GoodsServiceImpl(
         val host: String = "localhost",
         val port: Int = 9200,
-        @Autowired private val restTemplate: RestTemplate
+        val goods_index: String = "goods",
+        @Autowired val restTemplate: RestTemplate
 ): GoodsService {
 
-    override fun getById(id: Int): GetGoodsResponseDto {
+    override fun getById(id: Int): GetGoodsResponseDto? {
 
-        val headers: HttpHeaders = HttpHeaders()
-        headers.contentType = MediaType.APPLICATION_JSON
-        val httpEntity = HttpEntity(null, headers)
+        val url = "http://${host}:${port}/${goods_index}/_doc/${id}"
+        val response: String? = restTemplate.getForObject(url, String::class.java)
 
-        val url = "http://${host}:${port}/_doc/${id}"
-        val uri: URI = URI.create(url)
+        response?.let {
+            return GoodsDocumentParser.parseGetGoodsResponse(response)
+        }
+
+        return null
     }
 
-    override fun search(keyword: String): SearchResponseDto {
-        TODO("Not yet implemented")
+    override fun search(query: String): SearchGoodsResponseDto {
+        val url = "http://${host}:${port}/${goods_index}/_search"
+        val response: String? = restTemplate.postForObject(url, null, String::class.java)
     }
 }
