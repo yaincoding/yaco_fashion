@@ -22,12 +22,9 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 
+	implementation("com.google.code.gson:gson:2.9.0")
 	implementation("org.apache.httpcomponents:httpclient:4.5.13")
-	implementation("org.json:json:20220320")
-
-
-
-
+	implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0-RC")
 }
 
 tasks.withType<KotlinCompile> {
