@@ -20,7 +20,8 @@ es = Elasticsearch(
     hosts='http://localhost:9200'
 )
 
-alias = 'musinsa_goods'
+alias = 'goods'
+index_name = 'musinsa_goods'
 
 def create_index():
     
@@ -140,20 +141,20 @@ def create_index():
 
     tz = timezone('Asia/Seoul')
     now = datetime.now(tz).strftime('%Y%m%d%H%M%S')
-    index_name = f'{alias}_{now}'
+    new_index_name = f'{index_name}_{now}'
 
     result = es.indices.create(
-        index=index_name,
+        index=new_index_name,
         settings=settings,
         mappings=mappings
     )
 
     if result['acknowledged']:
-        print(f'index {index_name}이 생성되었습니다.')
-        return index_name
+        print(f'index {new_index_name}이 생성되었습니다.')
+        return new_index_name
 
 
-def index_data(index_name):
+def index_data(new_index_name):
     cursor.execute('USE musinsa;')
     cursor.execute(
         'SELECT id, title, category_id, image_url, click_count, sell_count, like_count, gender, hash_tags, price, link FROM goods;'
@@ -171,7 +172,8 @@ def index_data(index_name):
         parent_category_name = parent_category_rows[0][0]
 
         doc = {
-            '_index': index_name,
+            '_index': new_index_name,
+            '_id': id,
             '_source': {
                 'id': id,
                 'title': title,
@@ -203,7 +205,7 @@ def update_alias(new_index_name):
         old_index_names = es.indices.get_alias(name=alias)
         es.indices.put_alias(name=alias, index=new_index_name)
         if old_index_names:
-            for index in old_index_names:
+            for index in [i for i in old_index_names if i.startswith(index_name)]:
                 es.indices.delete_alias(name=alias, index=index)
                 es.indices.delete(index=index)
     except NotFoundError:
