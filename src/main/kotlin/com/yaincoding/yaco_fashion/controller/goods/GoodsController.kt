@@ -22,11 +22,6 @@ class GoodsController (
 
     @GetMapping("/goods/search")
     fun search(requestDto: SearchGoodsRequestDto): ResponseEntity<SearchGoodsResponseDto> {
-        val query: String? = requestDto.query
-        query?.let {
-            return ResponseEntity.ok(goodsService.search(query))
-        }
-
-        return ResponseEntity.ok(SearchGoodsResponseDto(count=0, docs= emptyList()))
+        return ResponseEntity.ok(goodsService.search(requestDto))
     }
 }
