@@ -12,6 +12,7 @@ import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
+import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
 
 @Service
@@ -26,10 +27,13 @@ class GoodsServiceImpl(
     override fun getById(id: Int): GetGoodsResponseDto? {
 
         val url = "http://${host}:${port}/${goods_index}/_doc/${id}"
-        val response: String? = restTemplate.getForObject(url, String::class.java)
-
-        response?.let {
-            return GoodsDocumentParser.parseGetGoodsResponse(response)
+        try {
+            val response: String? = restTemplate.getForObject(url, String::class.java)
+            response?.let {
+                return GoodsDocumentParser.parseGetGoodsResponse(response)
+            }
+        } catch (e: HttpClientErrorException.NotFound) {
+            return null
         }
 
         return null

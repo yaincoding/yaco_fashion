@@ -17,7 +17,12 @@ class GoodsController (
 
     @GetMapping("/goods/{id}")
     fun getById(@PathVariable id: Int): ResponseEntity<GetGoodsResponseDto> {
-        return ResponseEntity.ok(goodsService.getById(id))
+        val response: GetGoodsResponseDto? = goodsService.getById(id)
+        response?.let {
+            return ResponseEntity.ok(response)
+        }
+
+        return ResponseEntity.notFound().build()
     }
 
     @GetMapping("/goods/search")
