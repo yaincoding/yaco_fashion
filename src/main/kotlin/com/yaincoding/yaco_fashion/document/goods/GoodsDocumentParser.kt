@@ -3,9 +3,12 @@ package com.yaincoding.yaco_fashion.document.goods
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.google.gson.JsonArray
 import com.google.gson.JsonObject
+import com.google.gson.reflect.TypeToken
 import com.yaincoding.yaco_fashion.dto.goods.GetGoodsResponseDto
 import com.yaincoding.yaco_fashion.dto.goods.SearchGoodsResponseDto
+import java.lang.reflect.Type
 
 class GoodsDocumentParser {
 
@@ -24,13 +27,13 @@ class GoodsDocumentParser {
             val jsonObject = gson.fromJson(response, JsonObject::class.java)
             val hits = jsonObject.getAsJsonObject("hits")
             val count = hits.getAsJsonObject("total").get("value").asInt
-            val docs = hits.getAsJsonArray("hits")
+            val docHits: JsonArray = hits.getAsJsonArray("hits")
+            val docsString = docHits.map { it.asJsonObject.getAsJsonObject("_source") }.toString()
 
-            val responseObject: JsonObject = JsonObject()
-            responseObject.addProperty("count", count)
-            responseObject.add("docs", docs)
+            val type = object : TypeToken<List<GoodsDocument>>() {}.type
+            val docs: List<GoodsDocument> = gson.fromJson(docsString, type)
 
-            return gson.fromJson(responseObject.toString(), SearchGoodsResponseDto::class.java)
+            return SearchGoodsResponseDto(count=count, docs=docs)
         }
     }
 }
