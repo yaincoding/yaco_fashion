@@ -5,6 +5,7 @@ import com.yaincoding.yaco_fashion.dto.goods.GetGoodsResponseDto
 import com.yaincoding.yaco_fashion.dto.goods.SearchGoodsRequestDto
 import com.yaincoding.yaco_fashion.dto.goods.SearchGoodsResponseDto
 import com.yaincoding.yaco_fashion.query_dsl.EsQueryParams
+import com.yaincoding.yaco_fashion.query_dsl.GoodsSort
 import com.yaincoding.yaco_fashion.query_dsl.QueryDslFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.context.properties.ConfigurationProperties
@@ -44,6 +45,7 @@ class GoodsServiceImpl(
         val url = "http://${host}:${port}/${goods_index}/_search"
         val esQueryParams: EsQueryParams = EsQueryParams().apply {
             query=requestDto.query
+            sort=GoodsSort.valueOf(requestDto.sort.uppercase())
         }
         val esQuery: String = QueryDslFactory.createEsQuery(esQueryParams)
         val headers = HttpHeaders()
