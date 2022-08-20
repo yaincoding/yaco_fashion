@@ -39,6 +39,7 @@ out/
 ### python package manager ###
 Pipfile
 Pipfile.lock
+.python-version
 
 *.csv
 .DS_Store
