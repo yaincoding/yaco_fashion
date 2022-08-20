@@ -46,6 +46,7 @@ class GoodsServiceImpl(
         val esQueryParams: EsQueryParams = EsQueryParams().apply {
             query=requestDto.query
             sort=GoodsSort.valueOf(requestDto.sort.uppercase())
+            categoryId=requestDto.categoryId
         }
         val esQuery: String = QueryDslFactory.createEsQuery(esQueryParams)
         val headers = HttpHeaders()

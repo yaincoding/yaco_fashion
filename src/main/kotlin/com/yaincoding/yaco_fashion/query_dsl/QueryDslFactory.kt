@@ -4,11 +4,12 @@ class QueryDslFactory {
 
     companion object {
         fun createEsQuery(params: EsQueryParams): String {
-            val should = buildShould(params.query).joinToString(",", "[", "]")
+            val should = buildShouldQuery(params.query).joinToString(",", "[", "]")
+            val filter = buildFilterQuery(params).joinToString(",", "[", "]")
             val scoreFunctions = buildScoreFunctions().joinToString(",", "[", "]")
             val sortQuery = params.sort.getSortQuery()
 
-            val esQuery = """
+            return """
                 {
                     "query": {
                         "function_score": {
@@ -16,7 +17,8 @@ class QueryDslFactory {
                                 "constant_score": {
                                     "filter": {
                                         "bool": {
-                                            "should": $should
+                                            "should": $should,
+                                            "filter": $filter
                                         }
                                     }
                                 }
@@ -27,18 +29,16 @@ class QueryDslFactory {
                     "sort": $sortQuery
                 }
             """
-
-            return esQuery
         }
 
-        private fun buildShould(query: String?): List<String> {
+        private fun buildShouldQuery(query: String?): List<String> {
             val should = mutableListOf<String>()
             query?.let {
                 should.add(
                     """
                         {
                             "multi_match": {
-                                "query": "$query",
+                                "query": "$it",
                                 "type": "cross_fields",
                                 "operator": "and",
                                 "analyzer": "search_analyzer",
@@ -53,6 +53,23 @@ class QueryDslFactory {
             }
 
             return should
+        }
+
+        private fun buildFilterQuery(params: EsQueryParams): List<String> {
+            val filter = mutableListOf<String>()
+            params.categoryId?.let {
+                filter.add(
+                    """
+                        {
+                            "term": {
+                                "categoryId": "$it"
+                            }
+                        }
+                    """.trimIndent()
+                )
+            }
+
+            return filter
         }
 
         private fun buildScoreFunctions(): List<String> {
