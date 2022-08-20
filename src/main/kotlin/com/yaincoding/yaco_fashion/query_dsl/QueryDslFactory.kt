@@ -62,7 +62,7 @@ class QueryDslFactory {
                     """
                         {
                             "term": {
-                                "categoryId": "$it"
+                                "category_id": $it
                             }
                         }
                     """.trimIndent()
