@@ -21,13 +21,13 @@ import org.springframework.web.client.RestTemplate
 class GoodsServiceImpl(
         val host: String = "localhost",
         val port: Int = 9200,
-        val goods_index: String = "goods",
+        val goodsIndex: String = "goods",
         @Autowired val restTemplate: RestTemplate
 ): GoodsService {
 
     override fun getById(id: Int): GetGoodsResponseDto? {
 
-        val url = "http://${host}:${port}/${goods_index}/_doc/${id}"
+        val url = "http://${host}:${port}/${goodsIndex}/_doc/${id}"
         try {
             val response: String? = restTemplate.getForObject(url, String::class.java)
             response?.let {
@@ -42,7 +42,7 @@ class GoodsServiceImpl(
 
     override fun search(requestDto: SearchGoodsRequestDto): SearchGoodsResponseDto {
 
-        val url = "http://${host}:${port}/${goods_index}/_search"
+        val url = "http://${host}:${port}/${goodsIndex}/_search"
         val esQueryParams: EsQueryParams = EsQueryParams().apply {
             query=requestDto.query
             sort=GoodsSort.valueOf(requestDto.sort.uppercase())
