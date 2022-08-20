@@ -1,4 +1,4 @@
-package com.yaincoding.yaco_fashion.document.goods
+package com.yaincoding.yaco_fashion.domain.goods.document
 
 data class GoodsDocument (
     val id: Int,

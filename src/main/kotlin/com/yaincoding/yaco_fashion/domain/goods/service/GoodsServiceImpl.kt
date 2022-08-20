@@ -1,12 +1,12 @@
-package com.yaincoding.yaco_fashion.service.elasticsearch.goods
+package com.yaincoding.yaco_fashion.domain.goods.service
 
-import com.yaincoding.yaco_fashion.document.goods.GoodsDocumentParser
-import com.yaincoding.yaco_fashion.dto.goods.GetGoodsResponseDto
-import com.yaincoding.yaco_fashion.dto.goods.SearchGoodsRequestDto
-import com.yaincoding.yaco_fashion.dto.goods.SearchGoodsResponseDto
-import com.yaincoding.yaco_fashion.query_dsl.EsQueryParams
-import com.yaincoding.yaco_fashion.query_dsl.GoodsSort
-import com.yaincoding.yaco_fashion.query_dsl.QueryDslFactory
+import com.yaincoding.yaco_fashion.domain.goods.document.GoodsDocumentParser
+import com.yaincoding.yaco_fashion.domain.goods.dto.GetGoodsResponseDto
+import com.yaincoding.yaco_fashion.domain.goods.dto.SearchGoodsRequestDto
+import com.yaincoding.yaco_fashion.domain.goods.dto.SearchGoodsResponseDto
+import com.yaincoding.yaco_fashion.domain.goods.query_dsl.EsQueryParams
+import com.yaincoding.yaco_fashion.domain.goods.query_dsl.GoodsSort
+import com.yaincoding.yaco_fashion.domain.goods.query_dsl.QueryDslFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.http.HttpEntity
@@ -45,7 +45,7 @@ class GoodsServiceImpl(
         val url = "http://${host}:${port}/${goodsIndex}/_search"
         val esQueryParams: EsQueryParams = EsQueryParams().apply {
             query=requestDto.query
-            sort=GoodsSort.valueOf(requestDto.sort.uppercase())
+            sort= GoodsSort.valueOf(requestDto.sort.uppercase())
             categoryId=requestDto.categoryId
         }
         val esQuery: String = QueryDslFactory.createEsQuery(esQueryParams)

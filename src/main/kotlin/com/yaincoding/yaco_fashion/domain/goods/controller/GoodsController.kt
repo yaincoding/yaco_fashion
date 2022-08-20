@@ -1,10 +1,9 @@
-package com.yaincoding.yaco_fashion.controller.goods
+package com.yaincoding.yaco_fashion.domain.goods.controller
 
-import com.yaincoding.yaco_fashion.document.goods.GoodsDocument
-import com.yaincoding.yaco_fashion.dto.goods.GetGoodsResponseDto
-import com.yaincoding.yaco_fashion.dto.goods.SearchGoodsRequestDto
-import com.yaincoding.yaco_fashion.dto.goods.SearchGoodsResponseDto
-import com.yaincoding.yaco_fashion.service.elasticsearch.goods.GoodsService
+import com.yaincoding.yaco_fashion.domain.goods.dto.GetGoodsResponseDto
+import com.yaincoding.yaco_fashion.domain.goods.dto.SearchGoodsRequestDto
+import com.yaincoding.yaco_fashion.domain.goods.dto.SearchGoodsResponseDto
+import com.yaincoding.yaco_fashion.domain.goods.service.GoodsService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*

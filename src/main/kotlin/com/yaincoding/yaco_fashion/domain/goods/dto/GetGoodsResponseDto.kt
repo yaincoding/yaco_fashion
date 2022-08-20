@@ -1,4 +1,4 @@
-package com.yaincoding.yaco_fashion.dto.goods
+package com.yaincoding.yaco_fashion.domain.goods.dto
 
 data class GetGoodsResponseDto (
     val id: Int,
