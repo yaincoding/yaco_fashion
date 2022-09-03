@@ -1,8 +1,8 @@
 version: "3.7"
 services:
-  db:
+  yaco_mysql:
     image: ${MYSQL_IMAGE}
-    container_name: mysql
+    container_name: 'yaco_mysql'
     ports:
       - "3306:3306"
     env_file:
@@ -13,14 +13,17 @@ services:
       - --lower_case_table_names=1
     restart: always
     networks:
-      - yain_net
+      - yaco_net
 
-  elasticsearch:
+
+  yaco_es:
     build:
       context: elasticsearch/
       args:
         ELASTIC_VERSION: ${ELASTIC_VERSION}
-    container_name: 'elasticsearch'
+    container_name: 'yaco_es'
+    env_file:
+      - .env
     volumes:
       - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro,z
       - ./elasticsearch/config/user_dictionary.txt:/usr/share/elasticsearch/config/user_dictionary.txt:ro,z
@@ -33,24 +36,28 @@ services:
       ES_JAVA_OPTS: -Xmx2g -Xms2g
       discovery.type: single-node
     networks:
-      - yain_net
+      - yaco_net
 
-  kibana:
+
+  yaco_kibana:
     build:
       context: kibana/
       args:
         ELASTIC_VERSION: ${ELASTIC_VERSION}
-    container_name: 'kibana'
+    container_name: 'yaco_kibana'
+    env_file:
+      - .env
     volumes:
       - ./kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml:ro,Z
     ports:
       - "5601:5601"
     networks:
-      - yain_net
+      - yaco_net
     depends_on:
-      - elasticsearch
+      - yaco_es
+
 
 networks:
-  yain_net:
+  yaco_net:
     driver: bridge
-    name: yain_net
+    name: yaco_net
