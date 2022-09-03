@@ -9,7 +9,8 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 
-@RestController("/api/goods")
+@RestController
+@RequestMapping("/api/goods")
 class GoodsController (
     @Autowired val goodsService: GoodsService
 ) {
