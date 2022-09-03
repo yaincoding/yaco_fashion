@@ -9,12 +9,12 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 
-@RestController
+@RestController("/api/goods")
 class GoodsController (
     @Autowired val goodsService: GoodsService
 ) {
 
-    @GetMapping("/goods/{id}")
+    @GetMapping("/{id}")
     fun getById(@PathVariable id: Int): ResponseEntity<GetGoodsResponseDto> {
         val response: GetGoodsResponseDto? = goodsService.getById(id)
         response?.let {
@@ -24,7 +24,7 @@ class GoodsController (
         return ResponseEntity.notFound().build()
     }
 
-    @GetMapping("/goods/search")
+    @GetMapping("/search")
     fun search(requestDto: SearchGoodsRequestDto): ResponseEntity<SearchGoodsResponseDto> {
         return ResponseEntity.ok(goodsService.search(requestDto))
     }
