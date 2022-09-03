@@ -84,6 +84,7 @@ def create_goods_table():
             `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
             `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             PRIMARY KEY (`id`)
+            FOREIGN KEY (`category_id`) REFERENCES category(`id`)
         ) ENGINE=InnoDB AUTO_INCREMENT=45002 DEFAULT CHARSET=utf8mb3;
     '''
     cursor.execute(create_goods_table_sql)
