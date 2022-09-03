@@ -83,7 +83,7 @@ def create_goods_table():
             `link` varchar(511) DEFAULT NULL,
             `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
             `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-            PRIMARY KEY (`id`)
+            PRIMARY KEY (`id`),
             FOREIGN KEY (`category_id`) REFERENCES category(`id`)
         ) ENGINE=InnoDB AUTO_INCREMENT=45002 DEFAULT CHARSET=utf8mb3;
     '''
