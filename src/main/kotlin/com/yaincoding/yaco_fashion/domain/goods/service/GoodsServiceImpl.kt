@@ -8,7 +8,7 @@ import com.yaincoding.yaco_fashion.domain.goods.query_dsl.EsQueryParams
 import com.yaincoding.yaco_fashion.domain.goods.query_dsl.GoodsSort
 import com.yaincoding.yaco_fashion.domain.goods.query_dsl.QueryDslFactory
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.context.properties.ConfigurationProperties
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
@@ -17,12 +17,11 @@ import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
 
 @Service
-@ConfigurationProperties(prefix="elasticsearch")
 class GoodsServiceImpl(
-        val host: String = "localhost",
-        val port: Int = 9200,
-        val goodsIndex: String = "goods",
-        @Autowired val restTemplate: RestTemplate
+    @Value("\${elasticsearch.host}") private val host: String = "localhost",
+    @Value("\${elasticsearch.port}") private val port: Int = 9200,
+    @Value("\${elasticsearch.index.goods}") private val goodsIndex: String = "goods",
+    @Autowired val restTemplate: RestTemplate
 ): GoodsService {
 
     override fun getById(id: Int): GetGoodsResponseDto? {
@@ -42,7 +41,7 @@ class GoodsServiceImpl(
 
     override fun search(requestDto: SearchGoodsRequestDto): SearchGoodsResponseDto {
 
-        val url = "http://${host}:${port}/${goodsIndex}/_search"
+        val url = "${host}:${port}/${goodsIndex}/_search"
         val esQueryParams: EsQueryParams = EsQueryParams().apply {
             query=requestDto.query
             sort= GoodsSort.valueOf(requestDto.sort.uppercase())
