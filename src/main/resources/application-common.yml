@@ -2,6 +2,10 @@ spring:
   config:
     active:
       on-profile: common
+  datasource:
+    url: ${YACO_DB_HOST}
+    username: ${YACO_DB_USER}
+    password: ${YACO_DB_PASSWORD}
 
 server:
   port: 8080
