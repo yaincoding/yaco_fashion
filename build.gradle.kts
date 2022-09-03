@@ -24,6 +24,9 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
+	implementation("mysql:mysql-connector-java:8.0.29")
+	runtimeOnly("com.h2database:h2")
+
 	implementation("com.google.code.gson:gson:2.9.0")
 	implementation("org.apache.httpcomponents:httpclient:4.5.13")
 	implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0-RC")
