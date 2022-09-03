@@ -2,6 +2,12 @@ spring:
   config:
     active:
       on-profile: "dev"
+  jpa:
+    hibernate:
+      ddl-auto: update
+  h2:
+    console:
+      enabled: true
 
 elasticsearch:
   host: "localhost"

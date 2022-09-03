@@ -6,6 +6,14 @@ spring:
     url: ${YACO_DB_HOST}
     username: ${YACO_DB_USER}
     password: ${YACO_DB_PASSWORD}
+  jpa:
+    show-sql: false
+    properties:
+      jdbc:
+        time_zone: KST
+      hibernate:
+        format_sql: true
+        use_sql_comments: false
 
 server:
   port: 8080
