@@ -50,3 +50,5 @@ elasticsearch/indices
 elasticsearch/snapshot_cache
 elasticsearch/node.lock
 elasticsearch/nodes
+
+.env
