@@ -8,9 +8,15 @@ class QueryDslFactory {
             val filter = buildFilterQuery(params).joinToString(",", "[", "]")
             val scoreFunctions = buildScoreFunctions().joinToString(",", "[", "]")
             val sortQuery = params.sort.getSortQuery()
+            params.page
+            params.size
+
+            val from: Int = params.size * (params.page - 1)
 
             return """
                 {
+                    "from": $from,
+                    "size": ${params.size},
                     "query": {
                         "function_score": {
                             "query": {
