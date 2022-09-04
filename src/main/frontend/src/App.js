@@ -1,25 +1,51 @@
-import logo from './logo.svg';
 import './App.css';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { Layout } from 'antd';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+import GoodsSearchView from './route/GoodsSearchView';
+
+const { Content } = Layout;
+
+const App = () => (
+	<BrowserRouter>
+		<Layout style={{ height: '100vh' }}>
+			<Layout
+				style={{
+					background: '#ffffff',
+					padding: '0 24px 24px',
+				}}
+			>
+				<Content
+					className="site-layout-background"
+					style={{
+						display: 'flex',
+						flexDirection: 'column',
+						alignItems: 'center',
+						padding: 24,
+						margin: 0,
+						minHeight: 280,
+					}}
+				>
+					<Routes>
+						<Route
+							path="/"
+							element={
+								<GoodsSearchView />
+							}
+							exact
+						/>
+						<Route
+							path="/search"
+							element={
+								<GoodsSearchView />
+							}
+							exact
+						/>
+					</Routes>
+				</Content>
+			</Layout>
+		</Layout>
+	</BrowserRouter>
+);
 
 export default App;
