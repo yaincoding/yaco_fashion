@@ -6,6 +6,7 @@ plugins {
 	kotlin("jvm") version "1.6.21"
 	kotlin("plugin.spring") version "1.6.21"
 	kotlin("plugin.jpa") version "1.6.20"
+	kotlin("plugin.allopen") version "1.6.21"
 }
 
 group = "com.yaincoding"
@@ -38,11 +39,35 @@ allOpen {
 	annotation("javax.persistence.Embeddable")
 }
 
-noArg {
-	annotation("com.my.Annotation")
+sourceSets {
+	main {
+		resources {
+			listOf("$projectDir/src/main/frontend/build", "$projectDir/build/resources/main/static")
+		}
+	}
 }
 
+tasks.register<Exec>("npmInstall") {
+	workingDir("$projectDir/src/main/frontend")
+	commandLine("npm", "install")
+}
+
+tasks.register<Exec>("reactBuild") {
+	dependsOn("npmInstall")
+	workingDir("$projectDir/src/main/frontend")
+	commandLine("npm", "run", "build")
+}
+
+tasks.register<Copy>("copyBuildFiles") {
+	dependsOn("reactBuild")
+	from("$projectDir/src/main/frontend/build")
+	into("$projectDir/build/resources/main/static")
+}
+
+tasks.getByName("build").dependsOn("copyBuildFiles")
+
 tasks.withType<KotlinCompile> {
+	dependsOn("copyBuildFiles")
 	kotlinOptions {
 		freeCompilerArgs = listOf("-Xjsr305=strict")
 		jvmTarget = "17"
