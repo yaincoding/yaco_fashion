@@ -2,13 +2,17 @@ import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Layout } from 'antd';
 
-import GoodsSearchView from './route/GoodsSearchView';
+import GoodsSearchView from './route/goods/GoodsSearchView';
+import WordDictionaryView from './route/admin/WordDictionaryView';
+import SynonymDictionaryView from './route/admin/SynonymDictionaryView';
+import AppNavigation from './component/AppNavigation';
 
 const { Content } = Layout;
 
 const App = () => (
 	<BrowserRouter>
 		<Layout style={{ height: '100vh' }}>
+			<AppNavigation />
 			<Layout
 				style={{
 					background: '#ffffff',
@@ -38,6 +42,34 @@ const App = () => (
 							path="/search"
 							element={
 								<GoodsSearchView />
+							}
+							exact
+						/>
+						<Route
+							path="/admin"
+							element={
+								<WordDictionaryView />
+							}
+							exact
+						/>
+						<Route
+							path="/admin/dictionary"
+							element={
+								<WordDictionaryView />
+							}
+							exact
+						/>
+						<Route
+							path="/admin/dictionary/word"
+							element={
+								<WordDictionaryView />
+							}
+							exact
+						/>
+						<Route
+							path="/admin/dictionary/synonym"
+							element={
+								<SynonymDictionaryView />
 							}
 							exact
 						/>
