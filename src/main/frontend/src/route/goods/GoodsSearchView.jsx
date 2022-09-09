@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 
-import { Layout, Input, List, Space, Pagination } from 'antd';
-import { LikeOutlined, MessageOutlined, StarOutlined } from '@ant-design/icons';
+import { Layout, Input, Pagination } from 'antd';
 import axios from 'axios';
-import GoodsList from '../component/GoodsList';
+import GoodsList from '../../component/goods/GoodsList';
 
 const { Search } = Input;
 
@@ -29,24 +28,6 @@ const GoodsSearchView = () => {
 				console.error(err);
 			});
 	};
-
-	const data = goodsList.map((goods) => ({
-		title: goods.title,
-		category: `${goods.parentCategoryName} > ${goods.categoryName}`,
-		link: goods.link,
-		clickCount: goods.clickCount,
-		likeCount: goods.likeCount,
-		sellCount: goods.sellCount,
-		imageUrl: goods.imageUrl,
-	}));
-
-	const IconText = ({ icon, name, text }) => (
-		<Space>
-			{React.createElement(icon)}
-			{name}
-			{text}
-		</Space>
-	);
 
 	const onSearch = (query) => {
 		setQuery(query);

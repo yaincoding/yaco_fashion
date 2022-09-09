@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Input, Form, PageHeader, Space, Switch, Table } from 'antd';
 import axios from 'axios';
-import { formatTimeStr } from 'antd/lib/statistic/utils';
 
 const { Search } = Input;
 
