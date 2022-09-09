@@ -2,7 +2,7 @@ package com.yaincoding.yaco_fashion.admin.es_dictionary.word.dto
 
 import com.yaincoding.yaco_fashion.admin.es_dictionary.word.entity.EsWord
 
-data class EsWordSaveRequestDto (
+data class EsWordDto (
     val word: String? = null,
     val expression: String? = null,
     val active: Boolean = true

@@ -1,8 +1,7 @@
 package com.yaincoding.yaco_fashion.admin.es_dictionary.synonym.service
 
 import com.yaincoding.yaco_fashion.admin.es_dictionary.synonym.dto.EsSynonymListDto
-import com.yaincoding.yaco_fashion.admin.es_dictionary.synonym.dto.EsSynonymSaveRequestDto
-import com.yaincoding.yaco_fashion.admin.es_dictionary.synonym.dto.EsSynonymUpdateRequestDto
+import com.yaincoding.yaco_fashion.admin.es_dictionary.synonym.dto.EsSynonymDto
 import com.yaincoding.yaco_fashion.admin.es_dictionary.synonym.entity.EsSynonym
 import com.yaincoding.yaco_fashion.admin.es_dictionary.synonym.repository.EsSynonymRepository
 import org.springframework.data.domain.Page
@@ -35,14 +34,14 @@ class EsSynonymService(
         )
     }
 
-    fun save(dto: EsSynonymSaveRequestDto): Long? {
+    fun save(dto: EsSynonymDto): EsSynonymDto {
         val esSynonym: EsSynonym = dto.toEntity()
         val entity: EsSynonym = repository.save(esSynonym)
-        return entity.id
+        return entity.toDto()
     }
 
-    fun update(dto: EsSynonymUpdateRequestDto): Long? {
-        val esSynonym: EsSynonym = repository.findById(dto.id).orElseThrow()
+    fun update(id: Long, dto: EsSynonymDto): EsSynonymDto {
+        val esSynonym: EsSynonym = repository.findById(id).orElseThrow()
 
         dto.word?.let {
             esSynonym.word = it
@@ -56,7 +55,7 @@ class EsSynonymService(
 
         val entity: EsSynonym = repository.save(esSynonym)
 
-        return entity.id
+        return entity.toDto()
     }
 
     fun delete(id: Long) {

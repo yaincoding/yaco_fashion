@@ -1,9 +1,9 @@
 package com.yaincoding.yaco_fashion.admin.es_dictionary.word.controller
 
 import com.yaincoding.yaco_fashion.admin.es_dictionary.word.dto.EsWordListDto
-import com.yaincoding.yaco_fashion.admin.es_dictionary.word.dto.EsWordSaveRequestDto
-import com.yaincoding.yaco_fashion.admin.es_dictionary.word.dto.EsWordUpdateRequestDto
+import com.yaincoding.yaco_fashion.admin.es_dictionary.word.dto.EsWordDto
 import com.yaincoding.yaco_fashion.admin.es_dictionary.word.service.EsWordService
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -32,7 +32,7 @@ class EsWordController(
 
     @GetMapping("/search")
     fun search(
-        @RequestParam(required = false, defaultValue = "") query: String,
+        @RequestParam(required = true) query: String,
         @RequestParam(required = false, defaultValue = "0") page: Int,
         @RequestParam(required = false, defaultValue = "0") size: Int
     ): ResponseEntity<EsWordListDto> {
@@ -41,20 +41,20 @@ class EsWordController(
     }
 
     @PostMapping("/save")
-    fun save(@RequestBody dto: EsWordSaveRequestDto): ResponseEntity<Long> {
-        val id: Long? =service.save(dto)
-        return ResponseEntity.ok(id)
+    fun save(@RequestBody dto: EsWordDto): ResponseEntity<EsWordDto> {
+        val responseDto: EsWordDto = service.save(dto)
+        return ResponseEntity.ok(responseDto)
     }
 
-    @PutMapping("/update")
-    fun update(@RequestBody dto: EsWordUpdateRequestDto): ResponseEntity<Long> {
-        val id: Long? = service.update(dto)
-        return ResponseEntity.ok(id)
+    @PutMapping("/update/{id}")
+    fun update(@PathVariable id: Long, @RequestBody dto: EsWordDto): ResponseEntity<EsWordDto> {
+        val responseDto: EsWordDto = service.update(id, dto)
+        return ResponseEntity.ok(responseDto)
     }
 
     @DeleteMapping("/{id}")
-    fun delete(@PathVariable id: Long): ResponseEntity.BodyBuilder {
+    fun delete(@PathVariable id: Long): ResponseEntity<HttpStatus> {
         service.delete(id)
-        return ResponseEntity.ok()
+        return ResponseEntity(HttpStatus.OK)
     }
 }

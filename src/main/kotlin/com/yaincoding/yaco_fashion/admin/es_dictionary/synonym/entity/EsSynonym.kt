@@ -1,10 +1,11 @@
 package com.yaincoding.yaco_fashion.admin.es_dictionary.synonym.entity
 
+import com.yaincoding.yaco_fashion.admin.es_dictionary.synonym.dto.EsSynonymDto
 import com.yaincoding.yaco_fashion.common.BaseTime
 import javax.persistence.*
 
 @Entity
-@Table(name = "goods_synonym")
+@Table(name = "es_synonym")
 class EsSynonym (
 
     @Id
@@ -20,4 +21,13 @@ class EsSynonym (
     @Column(name = "active", nullable = false)
     var active: Boolean = true
 
-): BaseTime()
+): BaseTime() {
+
+    fun toDto(): EsSynonymDto {
+        return EsSynonymDto(
+            word = word,
+            synonym = synonym,
+            active = active,
+        )
+    }
+}

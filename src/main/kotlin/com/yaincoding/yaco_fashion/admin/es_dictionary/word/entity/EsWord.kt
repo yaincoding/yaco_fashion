@@ -1,10 +1,11 @@
 package com.yaincoding.yaco_fashion.admin.es_dictionary.word.entity
 
+import com.yaincoding.yaco_fashion.admin.es_dictionary.word.dto.EsWordDto
 import com.yaincoding.yaco_fashion.common.BaseTime
 import javax.persistence.*
 
 @Entity
-@Table(name = "goods_word")
+@Table(name = "es_word")
 class EsWord (
 
     @Id
@@ -20,4 +21,13 @@ class EsWord (
     @Column(name = "active", nullable = false)
     var active: Boolean = true
 
-): BaseTime()
+): BaseTime() {
+
+    fun toDto(): EsWordDto {
+        return EsWordDto(
+            word = word,
+            expression = expression,
+            active = active,
+        )
+    }
+}
