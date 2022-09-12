@@ -22,5 +22,5 @@ server:
     uri-encoding: UTF-8
 
 elasticsearch:
-  host: ${YACO_ES_HOST}
-  port: ${YACO_ES_PORT}
+  index:
+    goods: goods
