@@ -2,7 +2,7 @@ import os
 import boto3
 import pandas as pd
 import pymysql
-from settings import S3_CONFIG, DB_CONFIG, BASE_CONFIG
+from settings import S3_CONFIG, BASE_CONFIG
 
 def download_goods_data():
     s3 = boto3.client(
@@ -35,9 +35,9 @@ def download_goods_data():
 download_goods_data()
 
 mysql_conn = pymysql.connect(
-    host=DB_CONFIG["HOST"],
-    user=DB_CONFIG['USER'],
-    password=DB_CONFIG['PASSWORD'],
+    host=os.environ.get("YACO_DB_HOST"),
+    user=os.environ.get("YACO_DB_USER"),
+    password=os.environ.get("YACO_DB_PASSWORD"),
     charset='utf8'
 )
 
@@ -51,9 +51,14 @@ def create_database():
 
 create_database()
 
+def drop_tables():
+    cursor.execute('DROP TABLE IF EXISTS `goods`;')
+    cursor.execute('DROP TABLE IF EXISTS `category`;')
+
+drop_tables()
+
 # table 생성
 def create_category_table():
-    cursor.execute('DROP TABLE IF EXISTS `category`;')
     create_category_table_sql = '''
         CREATE TABLE `category` (
             `id` int NOT NULL AUTO_INCREMENT,
@@ -67,7 +72,6 @@ def create_category_table():
     cursor.execute(create_category_table_sql)
 
 def create_goods_table():
-    cursor.execute('DROP TABLE IF EXISTS `goods`;')
     create_goods_table_sql = '''
         CREATE TABLE `goods` (
             `id` int NOT NULL AUTO_INCREMENT,
