@@ -1,0 +1,14 @@
+spring:
+  config:
+    active:
+      on-profile: dev
+  jpa:
+    hibernate:
+      ddl-auto: update
+  h2:
+    console:
+      enabled: true
+
+elasticsearch:
+  host: ${YACO_ES_HOST}
+  port: ${YACO_ES_PORT}
