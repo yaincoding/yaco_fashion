@@ -2,13 +2,11 @@ spring:
   config:
     active:
       on-profile: dev
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: update
   h2:
     console:
       enabled: true
-
-elasticsearch:
-  host: ${YACO_ES_PROXY_HOST}
-  port: ${YACO_ES_PROXY_PORT}

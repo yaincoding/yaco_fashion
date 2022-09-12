@@ -1,14 +1,12 @@
 spring:
   config:
     active:
-      on-profile: dev
+      on-profile: prod
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
   h2:
     console:
       enabled: true
-
-elasticsearch:
-  host: ${YACO_ES_HOST}
-  port: ${YACO_ES_PORT}
