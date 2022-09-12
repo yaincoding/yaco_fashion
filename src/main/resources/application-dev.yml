@@ -10,5 +10,5 @@ spring:
       enabled: true
 
 elasticsearch:
-  index:
-    goods: goods
+  host: ${YACO_ES_PROXY_HOST}
+  port: ${YACO_ES_PROXY_PORT}
