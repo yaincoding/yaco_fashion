@@ -8,16 +8,16 @@ from settings import DB_CONFIG
 
 # mysql 연결
 mysql_conn = pymysql.connect(
-    host=DB_CONFIG["HOST"],
-    user=DB_CONFIG['USER'],
-    password=DB_CONFIG['PASSWORD'],
+    host=os.environ.get("YACO_DB_HOST"),
+    user=os.environ.get("YACO_DB_USER"),
+    password=os.environ.get("YACO_DB_PASSWORD"),
     charset='utf8'
 )
 cursor = mysql_conn.cursor()
 
 # elasticsearch 연결
 es = Elasticsearch(
-    hosts='http://localhost:9200'
+    hosts=f"{os.environ.get('YACO_ES_HOST')}:{os.environ.get('YACO_ES_PORT')}",
 )
 
 alias = 'goods'
