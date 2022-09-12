@@ -26,6 +26,8 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
 	implementation("mysql:mysql-connector-java:8.0.29")
+	implementation("org.mariadb.jdbc:mariadb-java-client:3.0.7")
+
 	runtimeOnly("com.h2database:h2")
 
 	implementation("com.google.code.gson:gson:2.9.0")
