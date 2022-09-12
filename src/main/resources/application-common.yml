@@ -3,11 +3,10 @@ spring:
     active:
       on-profile: common
   datasource:
-    url: ${YACO_DB_HOST}
+    url: ${YACO_JDBC_URL}
     username: ${YACO_DB_USER}
     password: ${YACO_DB_PASSWORD}
   jpa:
-    database: mysql
     show-sql: false
     properties:
       jdbc:
@@ -22,5 +21,7 @@ server:
     uri-encoding: UTF-8
 
 elasticsearch:
+  host: ${YACO_ES_HOST}
+  port: ${YACO_ES_PORT}
   index:
     goods: goods
