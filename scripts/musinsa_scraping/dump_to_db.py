@@ -2,7 +2,9 @@ import os
 import boto3
 import pandas as pd
 import pymysql
-from settings import S3_CONFIG, BASE_CONFIG
+from settings import BASE_CONFIG
+
+BUCKET_NAME = 'fashion-search'
 
 def download_goods_data():
     s3 = boto3.client(
@@ -13,7 +15,7 @@ def download_goods_data():
     )
 
     response = s3.list_objects_v2(
-        Bucket=S3_CONFIG['BUCKET_NAME']
+        Bucket=BUCKET_NAME
     )
     contents = response['Contents']
     keys = [content['Key'] for content in contents]
@@ -26,7 +28,7 @@ def download_goods_data():
         sub_dir = '/'.join(key.split('/')[:-1])
         os.makedirs(f'{base_dir}/{sub_dir}')
         s3.download_file(
-            Bucket=S3_CONFIG['BUCKET_NAME'],
+            Bucket=BUCKET_NAME,
             Key=key,
             Filename=f'{base_dir}/{key}'
         )
