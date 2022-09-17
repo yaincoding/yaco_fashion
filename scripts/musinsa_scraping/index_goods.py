@@ -155,7 +155,7 @@ def create_index():
 
 
 def index_data(new_index_name):
-    cursor.execute('USE musinsa;')
+    cursor.execute('USE yaco_fashion;')
     cursor.execute(
         'SELECT id, title, category_id, image_url, click_count, sell_count, like_count, gender, hash_tags, price, link FROM goods;'
     )
