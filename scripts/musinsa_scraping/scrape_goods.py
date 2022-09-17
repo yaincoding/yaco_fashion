@@ -23,18 +23,20 @@ done_category_codes = [
 
 ]
 
+BUCKET_NAME = 'fashion-search'
+
 s3 = boto3.client(
     service_name='s3',
     region_name='ap-northeast-2',
-    aws_access_key_id=S3_CONFIG['AWS_ACCESS_KEY'],
-    aws_secret_access_key=S3_CONFIG['AWS_SECRET_KEY']
+    aws_access_key_id=os.environ.get("AWS_ACCESS_KEY_ID"),
+    aws_secret_access_key=os.environ.get("AWS_SECRET_ACCESS_KEY")
 )
 
 KEY_PREFIX = "goods"
 
 def download_category_file():
     s3.download_file(
-        Bucket=S3_CONFIG['BUCKET_NAME'],
+        Bucket=BUCKET_NAME,
         Key=f'{BASE_CONFIG["SOURCE"]}/category/category.csv',
         Filename='category.csv',
     )
@@ -218,7 +220,7 @@ def scrape(pages_per_category: int):
         for page in range(1, pages_per_category + 1):
             key = f'{KEY_PREFIX}/{category_code}/{page}.csv'
             try:
-                if s3.head_object(Bucket=S3_CONFIG['BUCKET_NAME'], Key=key):
+                if s3.head_object(Bucket=BUCKET_NAME, Key=key):
                     continue
             except ClientError:
                 pass
@@ -247,7 +249,7 @@ def scrape(pages_per_category: int):
                 )
 
             key = f'{BASE_CONFIG["SOURCE"]}/{KEY_PREFIX}/{category_code}/{page}.csv'
-            s3.upload_file(save_path, S3_CONFIG['BUCKET_NAME'], key)
+            s3.upload_file(save_path, BUCKET_NAME, key)
             
 if __name__ == "__main__":
     pages_per_category = 1
