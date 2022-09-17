@@ -57,4 +57,10 @@ class EsWordController(
         service.delete(id)
         return ResponseEntity(HttpStatus.OK)
     }
+
+    @GetMapping("/apply")
+    fun apply(): ResponseEntity<HttpStatus> {
+        service.updatePackage()
+        return ResponseEntity(HttpStatus.OK)
+    }
 }
