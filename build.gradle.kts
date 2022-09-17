@@ -33,6 +33,11 @@ dependencies {
 	implementation("com.google.code.gson:gson:2.9.0")
 	implementation("org.apache.httpcomponents:httpclient:4.5.13")
 	implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0-RC")
+
+	//aws
+	implementation("com.amazonaws:aws-java-sdk-s3:1.12.301")
+	implementation("com.amazonaws:aws-java-sdk-opensearch:1.12.301")
+
 }
 
 allOpen {
