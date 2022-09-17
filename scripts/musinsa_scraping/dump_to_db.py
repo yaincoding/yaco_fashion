@@ -8,8 +8,8 @@ def download_goods_data():
     s3 = boto3.client(
         service_name='s3',
         region_name='ap-northeast-2',
-        aws_access_key_id=S3_CONFIG['AWS_ACCESS_KEY'],
-        aws_secret_access_key=S3_CONFIG['AWS_SECRET_KEY']
+        aws_access_key_id=os.environ.get("AWS_ACCESS_KEY_ID"),
+        aws_secret_access_key=os.environ.get("AWS_SECRET_ACCESS_KEY")
     )
 
     response = s3.list_objects_v2(
@@ -45,9 +45,9 @@ cursor = mysql_conn.cursor()
 
 # db 생성
 def create_database():
-    create_database_sql = 'CREATE DATABASE IF NOT EXISTS `musinsa`;'
+    create_database_sql = 'CREATE DATABASE IF NOT EXISTS `yaco_fashion`;'
     cursor.execute(create_database_sql)
-    cursor.execute('USE musinsa;')
+    cursor.execute('USE yaco_fashion;')
 
 create_database()
 

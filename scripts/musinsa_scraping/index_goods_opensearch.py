@@ -18,8 +18,8 @@ cursor = mysql_conn.cursor()
 
 # elasticsearch 연결
 REGION = "ap-northeast-2"
-AWS_ACCESS_KEY = os.environ.get("YACO_AWS_ADMIN_ACCESS_KEY")
-AWS_SECRET_KEY = os.environ.get("YACO_AWS_ADMIN_SECRET_KEY")
+AWS_ACCESS_KEY = os.environ.get("AWS_ACCESS_KEY_ID")
+AWS_SECRET_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
 
 awsauth = AWS4Auth(AWS_ACCESS_KEY, AWS_SECRET_KEY, REGION, "es")
 es = OpenSearch(
@@ -29,7 +29,6 @@ es = OpenSearch(
 )
 
 alias = 'goods'
-index_name = 'musinsa_goods'
 
 def create_index():
 
@@ -151,7 +150,7 @@ def create_index():
 
     tz = timezone('Asia/Seoul')
     now = datetime.now(tz).strftime('%Y%m%d%H%M%S')
-    new_index_name = f'{index_name}_{now}'
+    new_index_name = f'{alias}_{now}'
 
     result = es.indices.create(
         index=new_index_name,
@@ -164,7 +163,7 @@ def create_index():
 
 
 def index_data(new_index_name):
-    cursor.execute('USE musinsa;')
+    cursor.execute('USE yaco_fashion;')
     cursor.execute(
         'SELECT id, title, category_id, image_url, click_count, sell_count, like_count, gender, hash_tags, price, link FROM goods;'
     )
@@ -215,7 +214,7 @@ def update_alias(new_index_name):
         old_index_names = es.indices.get_alias(name=alias)
         es.indices.put_alias(name=alias, index=new_index_name)
         if old_index_names:
-            for index in [i for i in old_index_names if i.startswith(index_name)]:
+            for index in [i for i in old_index_names if i.startswith(alias)]:
                 es.indices.delete_alias(name=alias, index=index)
                 es.indices.delete(index=index)
     except NotFoundError:
