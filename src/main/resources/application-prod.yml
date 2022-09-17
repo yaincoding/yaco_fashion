@@ -10,3 +10,14 @@ spring:
   h2:
     console:
       enabled: true
+
+opensearch_domain_name: yaco-fashion
+
+dictionary:
+  s3_bucket_name: yaco-es-dictionary
+  words:
+    s3_key: prod/words.txt
+    package_name: words
+  synonyms:
+    s3_key: prod/synonyms.txt
+    package_name: synonyms
