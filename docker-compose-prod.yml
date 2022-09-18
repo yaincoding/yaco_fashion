@@ -1,6 +1,7 @@
 version: "3.7"
 services:
-  app:
+  yaco_fashion:
+    container_name: yaco_fashion
     build:
       context: .
     env_file:
@@ -11,6 +12,7 @@ services:
       - yaco_net
 
   nginx:
+    container_name: nginx
     build:
       context: ./nginx
     ports:
