@@ -21,6 +21,8 @@ services:
     depends_on:
       - yaco_fashion
     restart: on-failure
+    networks:
+      - yaco_net
 
 networks:
   yaco_net:
