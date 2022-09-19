@@ -74,16 +74,31 @@ class OpensearchPackageManager(
             for (packageDetails in packageDetailsList) {
                 if (packageDetails.packageID == packageId) {
                     if (packageDetails.domainPackageStatus == DomainPackageStatus.ACTIVE.name
-                        && packageDetails.packageVersion == availablePackageVersion) {
+                        || packageDetails.domainPackageStatus == DomainPackageStatus.ASSOCIATING.name) {
                         return true
+                    } else {
+                        Thread.sleep(1)
+                        break
                     }
-                } else if (packageDetails.domainPackageStatus == DomainPackageStatus.ASSOCIATING.name) {
-                    Thread.sleep(3000)
-                } else {
-                    return false
                 }
             }
         }
         return false
+    }
+
+    fun getPackageStatus(domainName: String, packageName: String): String? {
+        val packageId = getPackageId(packageName)
+        val request = ListPackagesForDomainRequest()
+        request.domainName = domainName
+        val result: ListPackagesForDomainResult = opensearch.listPackagesForDomain(request)
+
+        val packageDetailsList: List<DomainPackageDetails> = result.domainPackageDetailsList
+        for (packageDetails in packageDetailsList) {
+            if (packageDetails.packageID == packageId) {
+                return packageDetails.domainPackageStatus
+            }
+        }
+
+        return null
     }
 }

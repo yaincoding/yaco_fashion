@@ -99,5 +99,8 @@ class EsWordService(
         }
     }
 
+    fun getPackageStatus(): String? {
+        return packageManager.getPackageStatus(domainName, packageName)
+    }
 
 }

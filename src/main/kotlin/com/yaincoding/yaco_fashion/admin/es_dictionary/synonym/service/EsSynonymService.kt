@@ -100,4 +100,8 @@ class EsSynonymService(
             packageManager.waitForAssociate(packageId, domainName, availablePackageVersion)
         }
     }
+
+    fun getPackageStatus(): String? {
+        return packageManager.getPackageStatus(domainName, packageName)
+    }
 }
