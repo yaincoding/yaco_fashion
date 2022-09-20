@@ -81,7 +81,7 @@ class EsSynonymService(
     }
 
     fun updatePackage() {
-        val esSynonyms: List<String> = repository.findAll().toList().filter { e -> e.active }.map { e -> "${e.word} => ${e.synonym}" }
+        val esSynonyms: List<String> = repository.findAll().toList().filter { e -> e.active }.map { e -> "${e.word} => ${e.word},${e.synonym}" }
         val content: String = esSynonyms.joinToString("\n")
 
         uploadToS3(content)
