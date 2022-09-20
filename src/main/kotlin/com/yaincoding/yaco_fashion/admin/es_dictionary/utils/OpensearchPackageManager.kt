@@ -12,7 +12,7 @@ class OpensearchPackageManager(
     fun createPackage(s3BucketName: String, packageName: String, s3Key: String): String {
         val request = CreatePackageRequest()
         request.packageName = packageName
-        request.packageType = PackageType.TXTDICTIONARY.name
+        request.packageType = PackageType.TXTDICTIONARY.toString()
         request.packageSource = PackageSource().withS3BucketName(s3BucketName).withS3Key(s3Key)
 
         val result = opensearch.createPackage(request)
