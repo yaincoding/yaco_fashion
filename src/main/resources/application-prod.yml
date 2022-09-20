@@ -11,7 +11,7 @@ spring:
     console:
       enabled: true
 
-opensearch_domain_name: yaco-fashion
+opensearch_domain_name: yaco-search
 
 dictionary:
   s3_bucket_name: yaco-es-dictionary
