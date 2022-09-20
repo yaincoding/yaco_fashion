@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Input, Form, PageHeader, Space, Switch, Table } from 'antd';
+import { CloudSyncOutlined } from '@ant-design/icons';
+
 import axios from 'axios';
 
 const { Search } = Input;
@@ -9,6 +11,7 @@ const WordDictionary = () => {
 	const [totalCount, setTotalCount] = useState(0);
 	const [wordList, setWordList] = useState([]);
 	const [page, setPage] = useState(1);
+	const [loading, setLoading] = useState(false);
 
 	const [form] = Form.useForm();
 
@@ -31,10 +34,10 @@ const WordDictionary = () => {
 
 	useEffect(() => {
 		if (typeof query === 'string' && query.length > 0) {
-            searchWordList(query, page);
-        } else {
-            fetchWordList(page);
-        }
+			searchWordList(query, page);
+		} else {
+			fetchWordList(page);
+		}
 	}, [query, page]);
 
 	const searchWordList = (query, page) => {
@@ -125,6 +128,23 @@ const WordDictionary = () => {
 			.catch((error) => {
 				console.error(error);
 				alert(error);
+			});
+	};
+
+	const apply = () => {
+		setLoading(true);
+		axios({
+			method: 'get',
+			url: '/api/es_word/apply',
+		})
+			.then((response) => {
+				setLoading(false);
+				alert('색인에 적용되었습니다.');
+			})
+			.catch((error) => {
+				setLoading(false);
+				alert('색인에 적용 실패!');
+				console.log(error);
 			});
 	};
 
@@ -281,6 +301,33 @@ const WordDictionary = () => {
 						setQuery(value);
 					}}
 				/>
+			</div>
+			<div
+				style={{
+					display: 'flex',
+					justifyContent: 'flex-end',
+					width: '90%',
+					padding: '10px',
+				}}
+			>
+				<Button
+					type="primary"
+					shape="round"
+					icon={
+						<CloudSyncOutlined
+							style={{
+								fontSize: '20px',
+							}}
+						/>
+					}
+					size="large"
+					onClick={() => {
+						apply();
+					}}
+					loading={loading}
+				>
+					색인에 적용
+				</Button>
 			</div>
 			<div className="container" style={tableContainerStyle}>
 				<Table
