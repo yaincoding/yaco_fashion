@@ -30,8 +30,12 @@ const WordDictionary = () => {
 	};
 
 	useEffect(() => {
-		fetchWordList(page);
-	}, [query]);
+		if (typeof query === 'string' && query.length > 0) {
+            searchWordList(query, page);
+        } else {
+            fetchWordList(page);
+        }
+	}, [query, page]);
 
 	const searchWordList = (query, page) => {
 		axios({

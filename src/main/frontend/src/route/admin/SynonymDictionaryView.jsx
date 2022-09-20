@@ -39,8 +39,13 @@ const SynonymDictionaryView = () => {
 	};
 
 	useEffect(() => {
-		fetchSynonymList(page);
-	}, []);
+
+		if (typeof query === 'string' && query.length > 0) {
+		    searchSynonymList(query, page);
+		} else {
+		    fetchSynonymList(page);
+		}
+	}, [query, page]);
 
 	const searchSynonymList = (query, page) => {
 		axios({
