@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { List } from 'antd';
-import Layout from 'antd/lib/layout/layout';
 
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
