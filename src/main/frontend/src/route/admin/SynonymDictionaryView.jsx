@@ -62,12 +62,12 @@ const SynonymDictionaryView = () => {
 	};
 
 	const save = ({ word, synonym, active, bidirect }) => {
-		if (typeof word !== 'string' || word.length == 0) {
+		if (typeof word !== 'string' || word.length === 0) {
 			alert('단어 입력은 필수입니다!');
 			return;
 		}
 
-		if (typeof synonym !== 'string' || synonym.length == 0) {
+		if (typeof synonym !== 'string' || synonym.length === 0) {
 			alert('동의어 입력은 필수입니다!');
 			return;
 		}
