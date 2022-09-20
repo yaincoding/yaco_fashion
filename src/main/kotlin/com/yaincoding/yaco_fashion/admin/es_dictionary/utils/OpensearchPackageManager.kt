@@ -73,11 +73,13 @@ class OpensearchPackageManager(
             val packageDetailsList: List<DomainPackageDetails> = result.domainPackageDetailsList
             for (packageDetails in packageDetailsList) {
                 if (packageDetails.packageID == packageId) {
-                    if (packageDetails.domainPackageStatus == DomainPackageStatus.ACTIVE.name
+                    return if (packageDetails.domainPackageStatus == DomainPackageStatus.ACTIVE.name
                         || packageDetails.domainPackageStatus == DomainPackageStatus.ASSOCIATING.name) {
-                        return true
+                        true
+                    } else if (packageDetails.domainPackageStatus == DomainPackageStatus.ASSOCIATION_FAILED.name) {
+                        false
                     } else {
-                        Thread.sleep(1)
+                        Thread.sleep(3000)
                         break
                     }
                 }
