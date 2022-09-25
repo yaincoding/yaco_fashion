@@ -6,8 +6,6 @@ services:
       args:
         ELASTIC_VERSION: 8.4.2
     container_name: 'yaco_es'
-    env_file:
-      - .env
     volumes:
       - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro,z
       - ./elasticsearch/config/user_dictionary.txt:/usr/share/elasticsearch/config/user_dictionary.txt:ro,z
@@ -17,7 +15,7 @@ services:
       - "9200:9200"
       - "9300:9300"
     environment:
-      ES_JAVA_OPTS: -Xmx2g -Xms2g
+      ES_JAVA_OPTS: -Xmx1g -Xms1g
       discovery.type: single-node
     networks:
       - yaco_net
@@ -28,8 +26,6 @@ services:
       args:
         ELASTIC_VERSION: 8.4.2
     container_name: 'yaco_kibana'
-    env_file:
-      - .env
     volumes:
       - ./kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml:ro,Z
     ports:
