@@ -4,7 +4,7 @@ services:
     build:
       context: elasticsearch/
       args:
-        ELASTIC_VERSION: 8.4.2
+        ELASTIC_VERSION: 8.3.3
     container_name: 'yaco_es'
     volumes:
       - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro,z
@@ -24,7 +24,7 @@ services:
     build:
       context: kibana/
       args:
-        ELASTIC_VERSION: 8.4.2
+        ELASTIC_VERSION: 8.3.3
     container_name: 'yaco_kibana'
     volumes:
       - ./kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml:ro,Z
