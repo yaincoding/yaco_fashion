@@ -26,7 +26,7 @@ services:
     build:
       context: kibana/
       args:
-        ELASTIC_VERSION: ${ELASTIC_VERSION}
+        ELASTIC_VERSION: 8.4.2
     container_name: 'yaco_kibana'
     env_file:
       - .env
