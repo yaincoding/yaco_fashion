@@ -1,6 +1,6 @@
 # 4GB swap 공간 생성
 echo "스왑 생성중.."
-sudo dd if=/dev/zero of=/swapfile bs=128M count=32
+sudo dd if=/dev/zero of=/swapfile bs=128M count=16
 sudo chmod 600 /swapfile
 sudo mkswap /swapfile
 sudo swapon /swapfile
