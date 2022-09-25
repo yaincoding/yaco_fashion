@@ -1,0 +1,46 @@
+version: "3.7"
+services:
+  yaco_es:
+    build:
+      context: elasticsearch/
+      args:
+        ELASTIC_VERSION: 8.4.2
+    container_name: 'yaco_es'
+    env_file:
+      - .env
+    volumes:
+      - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro,z
+      - ./elasticsearch/config/user_dictionary.txt:/usr/share/elasticsearch/config/user_dictionary.txt:ro,z
+      - ./elasticsearch/config/synonyms.txt:/usr/share/elasticsearch/config/synonyms.txt:ro,z
+      - ./elasticsearch:/usr/share/elasticsearch/data:z
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      ES_JAVA_OPTS: -Xmx2g -Xms2g
+      discovery.type: single-node
+    networks:
+      - yaco_net
+
+  yaco_kibana:
+    build:
+      context: kibana/
+      args:
+        ELASTIC_VERSION: ${ELASTIC_VERSION}
+    container_name: 'yaco_kibana'
+    env_file:
+      - .env
+    volumes:
+      - ./kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml:ro,Z
+    ports:
+      - "5601:5601"
+    networks:
+      - yaco_net
+    depends_on:
+      - yaco_es
+
+
+networks:
+  yaco_net:
+    driver: bridge
+    name: yaco_net
