@@ -7,7 +7,7 @@ sudo swapon -s
 echo "/swapfile swap swap defaults 0 0" | sudo tee -a /etc/fstab
 
 # docker 설치
-sudo amazon-linux-extras install docker
+sudo amazon-linux-extras install -y docker
 sudo service docker start
 sudo usermod -a -G docker ec2-user
 
