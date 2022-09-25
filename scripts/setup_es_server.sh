@@ -6,12 +6,6 @@ sudo swapon /swapfile
 sudo swapon -s
 echo "/swapfile swap swap defaults 0 0" | sudo tee -a /etc/fstab
 
-# git 설치
-sudo yum install -y git
-
-# project clone
-git clone https://github.com/yaincoding/yaco_fashion.git
-
 # docker 설치
 sudo amazon-linux-extras install docker
 sudo service docker start
