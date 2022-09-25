@@ -6,6 +6,6 @@ FROM docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
 #nori
 RUN elasticsearch-plugin install analysis-nori
 
-# Example: RUN elasticsearch-plugin install analysis-icu
-# RUN elasticsearch-plugin install https://github.com/likejazz/seunjeon-elasticsearch-7/releases/download/7.9.1/analysis-seunjeon-7.9.1.zip
+RUN wget https://github.com/yaincoding/hanhinsam/raw/master/zip/elasticsearch-8.3.3/hanhinsam-0.1.jar -O /plugins/hanhinsam.zip
 
+RUN elasticsearch-plugin install file:///plugins/hanhinsam.zip
