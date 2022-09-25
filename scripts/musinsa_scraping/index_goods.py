@@ -4,7 +4,6 @@ from pytz import timezone
 import pymysql
 from elasticsearch import Elasticsearch, helpers, NotFoundError
 from tqdm import tqdm
-from settings import DB_CONFIG
 
 # mysql 연결
 mysql_conn = pymysql.connect(
@@ -21,7 +20,6 @@ es = Elasticsearch(
 )
 
 alias = 'goods'
-index_name = 'musinsa_goods'
 
 def create_index():
     
@@ -141,7 +139,7 @@ def create_index():
 
     tz = timezone('Asia/Seoul')
     now = datetime.now(tz).strftime('%Y%m%d%H%M%S')
-    new_index_name = f'{index_name}_{now}'
+    new_index_name = f'{alias}_{now}'
 
     result = es.indices.create(
         index=new_index_name,
@@ -205,7 +203,7 @@ def update_alias(new_index_name):
         old_index_names = es.indices.get_alias(name=alias)
         es.indices.put_alias(name=alias, index=new_index_name)
         if old_index_names:
-            for index in [i for i in old_index_names if i.startswith(index_name)]:
+            for index in [i for i in old_index_names if i.startswith(alias)]:
                 es.indices.delete_alias(name=alias, index=index)
                 es.indices.delete(index=index)
     except NotFoundError:
