@@ -17,7 +17,3 @@ sudo usermod -a -G docker ec2-user
 echo "도커 컴포즈 설치중.."
 sudo curl -L https://github.com/docker/compose/releases/download/1.22.0/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
-
-#es plugin 다운로드
-echo "hanhinsam 다운로드중.."
-wget https://github.com/yaincoding/hanhinsam/raw/master/zip/elasticsearch-8.3.3/hanhinsam-0.1.zip -O ../elasticsearch/hanhinsam.zip
