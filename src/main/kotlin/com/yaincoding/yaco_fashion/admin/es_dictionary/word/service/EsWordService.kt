@@ -1,7 +1,6 @@
 package com.yaincoding.yaco_fashion.admin.es_dictionary.word.service
 
 import com.amazonaws.services.s3.AmazonS3
-import com.yaincoding.yaco_fashion.admin.es_dictionary.utils.OpensearchPackageManager
 import com.yaincoding.yaco_fashion.admin.es_dictionary.word.dto.EsWordDto
 import com.yaincoding.yaco_fashion.admin.es_dictionary.word.dto.EsWordListDto
 import com.yaincoding.yaco_fashion.admin.es_dictionary.word.entity.EsWord
@@ -16,12 +15,9 @@ import org.springframework.stereotype.Service
 @Service
 class EsWordService(
     private val repository: EsWordRepository,
-    private val packageManager: OpensearchPackageManager,
     private val s3: AmazonS3,
     @Value("\${dictionary.s3_bucket_name}") private val s3BucketName: String,
     @Value("\${dictionary.words.s3_key}") private val s3Key: String,
-    @Value("\${dictionary.words.package_name}") private val packageName: String,
-    @Value("\${opensearch_domain_name}") private val domainName : String,
 ) {
     fun list(page: Int, size: Int): EsWordListDto {
         val pageable: Pageable = PageRequest.of(page, size, Sort.Direction.DESC, "id")
@@ -77,30 +73,4 @@ class EsWordService(
             false
         }
     }
-
-    fun updatePackage() {
-        val esWords: List<String?> = repository.findAll().toList().filter { e -> e.active }.map { e -> e.word }
-        val content: String = esWords.joinToString("\n")
-
-        uploadToS3(content)
-
-        var packageId: String? = packageManager.getPackageId(packageName = packageName)
-        if (packageId == null) {
-            packageId = packageManager.createPackage(s3BucketName, packageName, s3Key)
-        } else {
-            packageManager.update(s3BucketName, packageId, s3Key)
-        }
-
-        val availablePackageVersion: String? = packageManager.waitForUpdate(packageId)
-
-        if (availablePackageVersion != null) {
-            packageManager.associate(packageId, domainName)
-            packageManager.waitForAssociate(packageId, domainName, availablePackageVersion)
-        }
-    }
-
-    fun getPackageStatus(): String? {
-        return packageManager.getPackageStatus(domainName, packageName)
-    }
-
 }

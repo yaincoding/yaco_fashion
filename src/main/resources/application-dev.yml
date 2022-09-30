@@ -6,18 +6,14 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
   h2:
     console:
       enabled: true
-
-opensearch_domain_name: yaco-search
 
 dictionary:
   s3_bucket_name: yaco-es-dictionary
   words:
     s3_key: dev/words.txt
-    package_name: words
   synonyms:
     s3_key: dev/synonyms.txt
-    package_name: synonyms
