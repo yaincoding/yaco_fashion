@@ -3,7 +3,6 @@ spring:
     active:
       on-profile: common
   datasource:
-    url: jdbc:mariadb://${YACO_DB_HOST}:3306/${YACO_DB_NAME}?useUnicode=yes&serverTimezone=Asia/Seoul&characterEncoding=utf8
     username: ${YACO_DB_USER}
     password: ${YACO_DB_PASSWORD}
   jpa:

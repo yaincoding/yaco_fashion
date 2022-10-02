@@ -3,10 +3,11 @@ spring:
     active:
       on-profile: dev
   datasource:
+    url: jdbc:mysql://${YACO_DB_HOST}:3306/${YACO_DB_NAME}?useUnicode=yes&serverTimezone=Asia/Seoul&characterEncoding=utf8
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
   h2:
     console:
       enabled: true
