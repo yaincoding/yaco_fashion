@@ -57,16 +57,4 @@ class EsSynonymController(
         service.delete(id)
         return ResponseEntity(HttpStatus.OK)
     }
-
-    @GetMapping("/apply")
-    fun apply(): ResponseEntity<HttpStatus> {
-        service.updatePackage()
-        return ResponseEntity(HttpStatus.OK)
-    }
-
-    @GetMapping("/status")
-    fun status(): ResponseEntity<String> {
-        val status = service.getPackageStatus()
-        return ResponseEntity.ok(status)
-    }
 }
