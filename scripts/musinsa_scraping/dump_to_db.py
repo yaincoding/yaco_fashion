@@ -5,6 +5,7 @@ import pymysql
 from settings import BASE_CONFIG
 
 BUCKET_NAME = 'fashion-search'
+DB_NAME = os.environ.get("YACO_DB_NAME")
 
 def download_goods_data():
     s3 = boto3.client(
@@ -47,9 +48,9 @@ cursor = mysql_conn.cursor()
 
 # db 생성
 def create_database():
-    create_database_sql = 'CREATE DATABASE IF NOT EXISTS `yaco_fashion`;'
+    create_database_sql = f'CREATE DATABASE IF NOT EXISTS `{DB_NAME}`;'
     cursor.execute(create_database_sql)
-    cursor.execute('USE yaco_fashion;')
+    cursor.execute(f'USE {DB_NAME};')
 
 create_database()
 
