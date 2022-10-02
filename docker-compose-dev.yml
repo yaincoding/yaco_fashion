@@ -1,12 +1,12 @@
 version: "3.7"
 services:
   yaco_mysql:
-    image: ${MYSQL_IMAGE}
+    image: mysql:8.0.29
     container_name: 'yaco_mysql'
     ports:
       - "3306:3306"
-    env_file:
-      - .env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${YACO_DB_USER}
     command:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
@@ -20,10 +20,8 @@ services:
     build:
       context: elasticsearch/
       args:
-        ELASTIC_VERSION: ${ELASTIC_VERSION}
+        ELASTIC_VERSION: 8.3.3
     container_name: 'yaco_es'
-    env_file:
-      - .env
     volumes:
       - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro,z
       - ./elasticsearch/config/user_dictionary.txt:/usr/share/elasticsearch/config/user_dictionary.txt:ro,z
@@ -43,10 +41,8 @@ services:
     build:
       context: kibana/
       args:
-        ELASTIC_VERSION: ${ELASTIC_VERSION}
+        ELASTIC_VERSION: 8.3.3
     container_name: 'yaco_kibana'
-    env_file:
-      - .env
     volumes:
       - ./kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml:ro,Z
     ports:
