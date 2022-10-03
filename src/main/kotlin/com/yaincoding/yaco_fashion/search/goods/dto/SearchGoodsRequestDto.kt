@@ -1,4 +1,4 @@
-package com.yaincoding.yaco_fashion.domain.goods.dto
+package com.yaincoding.yaco_fashion.search.goods.dto
 
 data class SearchGoodsRequestDto (
     val query: String?,

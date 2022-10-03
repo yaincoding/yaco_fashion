@@ -1,9 +1,9 @@
-package com.yaincoding.yaco_fashion.domain.goods.controller
+package com.yaincoding.yaco_fashion.search.goods.controller
 
-import com.yaincoding.yaco_fashion.domain.goods.dto.GetGoodsResponseDto
-import com.yaincoding.yaco_fashion.domain.goods.dto.SearchGoodsRequestDto
-import com.yaincoding.yaco_fashion.domain.goods.dto.SearchGoodsResponseDto
-import com.yaincoding.yaco_fashion.domain.goods.service.GoodsService
+import com.yaincoding.yaco_fashion.search.goods.dto.GetGoodsResponseDto
+import com.yaincoding.yaco_fashion.search.goods.dto.SearchGoodsRequestDto
+import com.yaincoding.yaco_fashion.search.goods.dto.SearchGoodsResponseDto
+import com.yaincoding.yaco_fashion.search.goods.service.GoodsSearchService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/goods")
-class GoodsController (
-    @Autowired val goodsService: GoodsService
+class GoodsSearchController (
+    private val service: GoodsSearchService
 ) {
 
     @GetMapping("/{id}")
     fun getById(@PathVariable id: Int): ResponseEntity<GetGoodsResponseDto> {
-        val response: GetGoodsResponseDto? = goodsService.getById(id)
+        val response: GetGoodsResponseDto? = service.getById(id)
         response?.let {
             return ResponseEntity.ok(response)
         }
@@ -27,6 +27,6 @@ class GoodsController (
 
     @GetMapping("/search")
     fun search(requestDto: SearchGoodsRequestDto): ResponseEntity<SearchGoodsResponseDto> {
-        return ResponseEntity.ok(goodsService.search(requestDto))
+        return ResponseEntity.ok(service.search(requestDto))
     }
 }

@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
 
-internal class GoodsServiceImplTest {
+internal class GoodsSearchServiceImplTest {
 
     @Test
     fun getById() {

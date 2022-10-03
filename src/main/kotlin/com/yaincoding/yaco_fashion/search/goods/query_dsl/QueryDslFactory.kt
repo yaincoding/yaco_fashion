@@ -1,4 +1,4 @@
-package com.yaincoding.yaco_fashion.domain.goods.query_dsl
+package com.yaincoding.yaco_fashion.search.goods.query_dsl
 
 class QueryDslFactory {
 

@@ -1,6 +1,6 @@
-package com.yaincoding.yaco_fashion.domain.goods.document
+package com.yaincoding.yaco_fashion.search.goods.dto
 
-data class GoodsDocument (
+data class GetGoodsResponseDto (
     val id: Int,
     val title: String,
     val categoryId: Int,

@@ -1,12 +1,12 @@
-package com.yaincoding.yaco_fashion.domain.goods.document
+package com.yaincoding.yaco_fashion.search.goods.document
 
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
-import com.yaincoding.yaco_fashion.domain.goods.dto.GetGoodsResponseDto
-import com.yaincoding.yaco_fashion.domain.goods.dto.SearchGoodsResponseDto
+import com.yaincoding.yaco_fashion.search.goods.dto.GetGoodsResponseDto
+import com.yaincoding.yaco_fashion.search.goods.dto.SearchGoodsResponseDto
 
 class GoodsDocumentParser {
 
