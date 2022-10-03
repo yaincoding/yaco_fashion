@@ -2,12 +2,21 @@ import os
 import boto3
 import pandas as pd
 import pymysql
-from settings import BASE_CONFIG
 
 BUCKET_NAME = 'fashion-search'
+CATEGORY_PREFIX = 'musinsa/category'
+GOODS_PREFIX = 'musinsa/goods'
 DB_NAME = os.environ.get("YACO_DB_NAME")
 
-def download_goods_data():
+def download_category_data():
+
+    base_dir = f'{os.environ.get("HOME")}/workspace/fashion-search/{CATEGORY_PREFIX}'
+    if not os.path.isdir(base_dir):
+        os.makedirs(base_dir)
+
+    if os.path.isfile(f'{base_dir}/category.csv'):
+        return
+
     s3 = boto3.client(
         service_name='s3',
         region_name='ap-northeast-2',
@@ -16,25 +25,52 @@ def download_goods_data():
     )
 
     response = s3.list_objects_v2(
-        Bucket=BUCKET_NAME
+        Bucket=BUCKET_NAME,
+        Prefix=CATEGORY_PREFIX,
     )
-    contents = response['Contents']
-    keys = [content['Key'] for content in contents]
-    keys = [key for key in keys if key.startswith('goods')]
 
-    base_dir = f'{os.environ.get("HOME")}/workspace/musinsa_data'
+    contents = response['Contents']
+    key = [content['Key'] for content in contents][0]
+
+    s3.download_file(
+        Bucket=BUCKET_NAME,
+        Key=key,
+        Filename=f'{base_dir}/category.csv'
+    )
+    s3.close()
+
+def download_goods_data():
+
+    base_dir = f'{os.environ.get("HOME")}/workspace'
+
+    s3 = boto3.client(
+        service_name='s3',
+        region_name='ap-northeast-2',
+        aws_access_key_id=os.environ.get("AWS_ACCESS_KEY_ID"),
+        aws_secret_access_key=os.environ.get("AWS_SECRET_ACCESS_KEY")
+    )
+
+    response = s3.list_objects_v2(
+        Bucket=BUCKET_NAME,
+        Prefix=GOODS_PREFIX,
+    )
+
+    keys = [content['Key'] for content in response['Contents']]
+
     for key in keys:
-        if os.path.isfile(f'{base_dir}/{key}'):
+        if os.path.isfile(f'{base_dir}/{BUCKET_NAME}/{key}'):
             continue
         sub_dir = '/'.join(key.split('/')[:-1])
-        os.makedirs(f'{base_dir}/{sub_dir}')
+        if not os.path.isdir(f'{base_dir}/{sub_dir}'):
+            os.makedirs(f'{base_dir}/{BUCKET_NAME}/{sub_dir}')
         s3.download_file(
             Bucket=BUCKET_NAME,
             Key=key,
-            Filename=f'{base_dir}/{key}'
+            Filename=f'{base_dir}/{BUCKET_NAME}/{key}'
         )
     s3.close()
 
+download_category_data()
 download_goods_data()
 
 mysql_conn = pymysql.connect(
@@ -100,7 +136,7 @@ create_category_table()
 create_goods_table()
 
 def insert_category_data():
-    fname = f'{BASE_CONFIG["BASE_DIR"]}/{BASE_CONFIG["SOURCE"]}/category/category.csv'
+    fname = f'{os.environ.get("HOME")}/workspace/{BUCKET_NAME}/{CATEGORY_PREFIX}/category.csv'
     category_df = pd.read_csv(
         fname,
         dtype={'code': str, 'parent_code': str, 'name': str}
@@ -133,7 +169,7 @@ def insert_goods_data():
         id, name = row
         category_map[name] = id
 
-    goods_dir = f'{BASE_CONFIG["BASE_DIR"]}/{BASE_CONFIG["SOURCE"]}/goods'
+    goods_dir = f'{os.environ.get("HOME")}/workspace/{BUCKET_NAME}/{GOODS_PREFIX}'
     insert_sql = '''
     INSERT INTO goods
         (title, category_id, image_url, click_count, sell_count, like_count, gender, hash_tags, price, link)
