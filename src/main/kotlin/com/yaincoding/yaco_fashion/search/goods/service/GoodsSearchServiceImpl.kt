@@ -6,7 +6,7 @@ import com.yaincoding.yaco_fashion.search.goods.dto.SearchGoodsRequestDto
 import com.yaincoding.yaco_fashion.search.goods.dto.SearchGoodsResponseDto
 import com.yaincoding.yaco_fashion.search.goods.query_dsl.EsQueryParams
 import com.yaincoding.yaco_fashion.search.goods.query_dsl.GoodsSort
-import com.yaincoding.yaco_fashion.search.goods.query_dsl.QueryDslFactory
+import com.yaincoding.yaco_fashion.search.goods.query_dsl.GoodsSearchQueryDsl
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpEntity
@@ -49,7 +49,7 @@ class GoodsSearchServiceImpl(
             page=requestDto.page
             size=requestDto.size
         }
-        val esQuery: String = QueryDslFactory.createEsQuery(esQueryParams)
+        val esQuery: String = GoodsSearchQueryDsl.createEsQuery(esQueryParams)
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
         val httpEntity: HttpEntity<String> = HttpEntity<String>(esQuery, headers)

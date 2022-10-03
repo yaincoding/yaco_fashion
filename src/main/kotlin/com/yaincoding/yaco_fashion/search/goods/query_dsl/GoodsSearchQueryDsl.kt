@@ -1,6 +1,6 @@
 package com.yaincoding.yaco_fashion.search.goods.query_dsl
 
-class QueryDslFactory {
+class GoodsSearchQueryDsl {
 
     companion object {
         fun createEsQuery(params: EsQueryParams): String {
