@@ -6,9 +6,9 @@ from urllib.request import urlopen
 import time
 import pandas as pd
 from tqdm import tqdm
-from settings import BASE_CONFIG, S3_CONFIG
 
 HOST = "https://www.musinsa.com"
+BUCKET_NAME = 'fashion-search'
 
 category_map = {
     "001": "상의", 
@@ -64,17 +64,17 @@ def upload_to_s3(save_path, key):
     s3 = boto3.resource(
         service_name='s3',
         region_name='ap-northeast-2',
-        aws_access_key_id=S3_CONFIG['AWS_ACCESS_KEY'],
-        aws_secret_access_key=S3_CONFIG['AWS_SECRET_KEY']
+        aws_access_key_id=os.environ.get("AWS_ACCESS_KEY_ID"),
+        aws_secret_access_key=os.environ.get("AWS_SECRET_ACCESS_KEY")
     )
 
-    bucket = s3.Bucket(name=S3_CONFIG['BUCKET_NAME'])
+    bucket = s3.Bucket(name=BUCKET_NAME)
     bucket.upload_file(save_path, key)
 
 
 if __name__ == "__main__":
-    base_dir = BASE_CONFIG['BASE_DIR']
-    sub_dir = f'{BASE_CONFIG["SOURCE"]}/category'
+    base_dir = f'{os.environ.get("HOME")}/workspace/fashion-search'
+    sub_dir = f'musinsa/category'
     if not os.path.isdir(f'{base_dir}/{sub_dir}'):
         os.makedirs(f'{base_dir}/{sub_dir}')
 

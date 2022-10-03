@@ -15,15 +15,14 @@ from webdriver_manager.chrome import ChromeDriverManager # Mac M1
 from urllib.request import urlopen, Request
 import pandas as pd
 from tqdm import tqdm
-from settings import BASE_CONFIG ,S3_CONFIG
 
 HOST = "https://www.musinsa.com"
+BUCKET_NAME = 'fashion-search'
+KEY_PREFIX = "goods"
 
 done_category_codes = [
 
 ]
-
-BUCKET_NAME = 'fashion-search'
 
 s3 = boto3.client(
     service_name='s3',
@@ -32,12 +31,11 @@ s3 = boto3.client(
     aws_secret_access_key=os.environ.get("AWS_SECRET_ACCESS_KEY")
 )
 
-KEY_PREFIX = "goods"
 
 def download_category_file():
     s3.download_file(
         Bucket=BUCKET_NAME,
-        Key=f'{BASE_CONFIG["SOURCE"]}/category/category.csv',
+        Key='musinsa/category/category.csv',
         Filename='category.csv',
     )
 
@@ -236,7 +234,7 @@ def scrape(pages_per_category: int):
                 columns=['title', 'parent_category', 'category', 'image_url', 'click_count', 'sell_count', 'like_count', 'gender', 'hash_tags', 'price', 'link'],
                 data=goods_list
             )
-            save_dir = f'{BASE_CONFIG["BASE_DIR"]}/{BASE_CONFIG["SOURCE"]}/{KEY_PREFIX}/{category_code}'
+            save_dir = f'{os.environ.get("HOME")}/workspace/musinsa/goods/{category_code}'
             if not os.path.isdir(save_dir):
                 os.makedirs(save_dir)
             save_path = f'{save_dir}/{page}.csv'
@@ -248,7 +246,7 @@ def scrape(pages_per_category: int):
                     quoting=csv.QUOTE_ALL
                 )
 
-            key = f'{BASE_CONFIG["SOURCE"]}/{KEY_PREFIX}/{category_code}/{page}.csv'
+            key = f'musinsa/goods/{category_code}/{page}.csv'
             s3.upload_file(save_path, BUCKET_NAME, key)
             
 if __name__ == "__main__":
