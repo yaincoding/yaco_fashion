@@ -30,11 +30,11 @@ def upload_to_s3(keywords: list):
         data=keywords,
     )
 
-    save_dir = f'{os.environ.get("HOME")}/workspace/fashion-search/musinsa/top_keywords'
+    save_dir = f'{os.environ.get("HOME")}/workspace/fashion-search/musinsa/top_keyword'
     if not os.path.isdir(save_dir):
         os.makedirs(save_dir)
 
-    fname = 'top_keywords.csv'
+    fname = 'top_keyword.csv'
     save_path = f'{save_dir}/{fname}'
     df.to_csv(
         save_path,
@@ -52,7 +52,7 @@ def upload_to_s3(keywords: list):
     )
 
     bucket = s3.Bucket(name=BUCKET_NAME)
-    bucket.upload_file(save_path, 'musinsa/top_keywords/top_keywords.csv')
+    bucket.upload_file(save_path, 'musinsa/top_keyword/top_keyword.csv')
 
 if __name__ == "__main__":
     top_keywords = scrape_top_search_keywords()

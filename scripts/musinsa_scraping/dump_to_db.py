@@ -6,7 +6,7 @@ import pymysql
 BUCKET_NAME = 'fashion-search'
 CATEGORY_PREFIX = 'musinsa/category'
 GOODS_PREFIX = 'musinsa/goods'
-TOP_KEYWORDS_PREFIX = 'musinsa/top_keywords'
+TOP_KEYWORD_PREFIX = 'musinsa/top_keyword'
 DB_NAME = os.environ.get("YACO_DB_NAME")
 
 def download_category_data():
@@ -71,12 +71,12 @@ def download_goods_data():
         )
     s3.close()
 
-def download_top_keywords():
-    base_dir = f'{os.environ.get("HOME")}/workspace/fashion-search/{TOP_KEYWORDS_PREFIX}'
+def download_top_keyword():
+    base_dir = f'{os.environ.get("HOME")}/workspace/fashion-search/{TOP_KEYWORD_PREFIX}'
     if not os.path.isdir(base_dir):
         os.makedirs(base_dir)
 
-    if os.path.isfile(f'{base_dir}/top_keywords.csv'):
+    if os.path.isfile(f'{base_dir}/top_keyword.csv'):
         return
 
     s3 = boto3.client(
@@ -88,7 +88,7 @@ def download_top_keywords():
 
     response = s3.list_objects_v2(
         Bucket=BUCKET_NAME,
-        Prefix=TOP_KEYWORDS_PREFIX,
+        Prefix=TOP_KEYWORD_PREFIX,
     )
 
     contents = response['Contents']
@@ -97,13 +97,13 @@ def download_top_keywords():
     s3.download_file(
         Bucket=BUCKET_NAME,
         Key=key,
-        Filename=f'{base_dir}/top_keywords.csv'
+        Filename=f'{base_dir}/top_keyword.csv'
     )
     s3.close()
 
 download_category_data()
 download_goods_data()
-download_top_keywords()
+download_top_keyword()
 
 mysql_conn = pymysql.connect(
     host=os.environ.get("YACO_DB_HOST"),
@@ -125,7 +125,7 @@ create_database()
 def drop_tables():
     cursor.execute('DROP TABLE IF EXISTS `goods`;')
     cursor.execute('DROP TABLE IF EXISTS `category`;')
-    cursor.execute('DROP TABLE IF EXISTS `top_keywords`;')
+    cursor.execute('DROP TABLE IF EXISTS `top_keyword`;')
 
 drop_tables()
 
@@ -165,9 +165,9 @@ def create_goods_table():
     '''
     cursor.execute(create_goods_table_sql)
 
-def create_top_keywords_table():
-    create_top_keywords_table_sql = '''
-        CREATE TABLE `top_keywords` (
+def create_top_keyword_table():
+    create_top_keyword_table_sql = '''
+        CREATE TABLE `top_keyword` (
             `id` int NOT NULL AUTO_INCREMENT,
             `keyword` varchar(255) NOT NULL,
             `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -175,11 +175,11 @@ def create_top_keywords_table():
             PRIMARY KEY (`id`)
         ) ENGINE=InnoDB AUTO_INCREMENT=45002 DEFAULT CHARSET=utf8mb3;
     '''
-    cursor.execute(create_top_keywords_table_sql)
+    cursor.execute(create_top_keyword_table_sql)
 
 create_category_table()
 create_goods_table()
-create_top_keywords_table()
+create_top_keyword_table()
 
 def insert_category_data():
     fname = f'{os.environ.get("HOME")}/workspace/{BUCKET_NAME}/{CATEGORY_PREFIX}/category.csv'
@@ -242,8 +242,8 @@ def insert_goods_data():
                 cursor.execute(insert_sql, (title, category_id, image_url, click_count, sell_count, like_count, gender, hash_tags, price, link))
     mysql_conn.commit()
 
-def insert_top_keywords_data():
-    fname = f'{os.environ.get("HOME")}/workspace/{BUCKET_NAME}/{TOP_KEYWORDS_PREFIX}/top_keywords.csv'
+def insert_top_keyword_data():
+    fname = f'{os.environ.get("HOME")}/workspace/{BUCKET_NAME}/{TOP_KEYWORD_PREFIX}/top_keyword.csv'
     df = pd.read_csv(
         fname,
         dtype={'keyword': str}
@@ -251,12 +251,12 @@ def insert_top_keywords_data():
 
     for _, row in df.iterrows():
         keyword = row['keyword']
-        insert_sql = 'INSERT INTO top_keywords (keyword) VALUES (%s);'
+        insert_sql = 'INSERT INTO top_keyword (keyword) VALUES (%s);'
         cursor.execute(insert_sql, (keyword))
     mysql_conn.commit() 
 
 insert_category_data()
 insert_goods_data()
-insert_top_keywords_data()
+insert_top_keyword_data()
 
 mysql_conn.close()
