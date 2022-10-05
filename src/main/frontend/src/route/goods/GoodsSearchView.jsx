@@ -6,7 +6,7 @@ import axios from 'axios';
 import GoodsList from '../../component/goods/GoodsList';
 import { useEffect } from 'react';
 
-const GoodsSearchView = ({ match }) => {
+const GoodsSearchView = () => {
 	const [goodsList, setGoodsList] = useState([]);
 	const [count, setCount] = useState(0);
 	const [suggests, setSuggests] = useState([]);
@@ -24,12 +24,12 @@ const GoodsSearchView = ({ match }) => {
 			url: '/api/goods/search',
 			params: { query: query, page: page },
 		})
-			.then((res) => {
-				setCount(res.data.count);
-				setGoodsList(res.data.docs);
+			.then((response) => {
+				setCount(response.data.count);
+				setGoodsList(response.data.docs);
 			})
-			.catch((err) => {
-				console.error(err);
+			.catch((error) => {
+				console.error(error);
 			});
 	};
 
@@ -78,7 +78,7 @@ const GoodsSearchView = ({ match }) => {
 		if (typeof query === 'string' && query.length > 0) {
 			fetchGoods();
 		}
-	}, [searchParams]);
+	}, [query, page, suggests]);
 
 	return (
 		<Layout className="container" style={layoutStyle}>
@@ -104,13 +104,6 @@ const GoodsSearchView = ({ match }) => {
 					onSearch={(value, event) => {
 						event.preventDefault();
 						goSearchPage(value, page);
-					}}
-					onPressEnter={(event) => {
-						event.preventDefault();
-						goSearchPage(
-							event.target.value,
-							page
-						);
 					}}
 					style={{
 						width: '100%',
