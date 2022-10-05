@@ -133,7 +133,7 @@ drop_tables()
 def create_category_table():
     create_category_table_sql = '''
         CREATE TABLE `category` (
-            `id` int NOT NULL AUTO_INCREMENT,
+            `id` bigint NOT NULL AUTO_INCREMENT,
             `name` varchar(255) NOT NULL,
             `parent_id` int DEFAULT NULL,
             `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -146,9 +146,9 @@ def create_category_table():
 def create_goods_table():
     create_goods_table_sql = '''
         CREATE TABLE `goods` (
-            `id` int NOT NULL AUTO_INCREMENT,
+            `id` bigint NOT NULL AUTO_INCREMENT,
             `title` varchar(255) DEFAULT NULL,
-            `category_id` int NOT NULL DEFAULT 0,
+            `category_id` bigint NOT NULL DEFAULT 0,
             `image_url` text,
             `click_count` int NOT NULL DEFAULT 0,
             `sell_count` int NOT NULL DEFAULT 0,
@@ -168,7 +168,7 @@ def create_goods_table():
 def create_top_keyword_table():
     create_top_keyword_table_sql = '''
         CREATE TABLE `top_keyword` (
-            `id` int NOT NULL AUTO_INCREMENT,
+            `id` bigint NOT NULL AUTO_INCREMENT,
             `keyword` varchar(255) NOT NULL,
             `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
             `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
