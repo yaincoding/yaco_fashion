@@ -1,26 +1,30 @@
 import React, { useState } from 'react';
+import { useSearchParams, useLocation } from 'react-router-dom';
 
-import { Layout, Input, Pagination } from 'antd';
+import { Layout, Input, Pagination, AutoComplete } from 'antd';
 import axios from 'axios';
 import GoodsList from '../../component/goods/GoodsList';
+import { useEffect } from 'react';
 
-const { Search } = Input;
-
-const GoodsSearchView = () => {
+const GoodsSearchView = ({ match }) => {
 	const [goodsList, setGoodsList] = useState([]);
 	const [count, setCount] = useState(0);
-	const [query, setQuery] = useState(null);
+	const [suggests, setSuggests] = useState([]);
 
-	const searchGoods = async (query, page) => {
-		console.log(`query=${query}`);
-		setQuery(query);
+	let [searchParams, setSearchParams] = useSearchParams();
+
+	const query = searchParams.get('query');
+	const page = searchParams.get('page') || 1;
+
+	console.log(query, page);
+
+	const fetchGoods = async () => {
 		await axios({
 			method: 'get',
 			url: '/api/goods/search',
 			params: { query: query, page: page },
 		})
 			.then((res) => {
-				console.log('검색결과 log', res.data);
 				setCount(res.data.count);
 				setGoodsList(res.data.docs);
 			})
@@ -29,35 +33,97 @@ const GoodsSearchView = () => {
 			});
 	};
 
-	const onSearch = (query) => {
-		setQuery(query);
-		searchGoods(query, 1);
+	const goSearchPage = (query, page) => {
+		setSearchParams({
+			query: query,
+			page: page,
+		});
 	};
 
-	const onPageChange = (page) => {
-		searchGoods(query, page);
+	const onTyping = async (query) => {
+		await axios({
+			method: 'get',
+			url: 'api/auto_complete',
+			params: { query: query, size: 5 },
+		})
+			.then((response) => {
+				setSuggests(response.data.keywords);
+			})
+			.catch((error) => {
+				console.error(error);
+			});
 	};
+
+	const renderSuggests = () => {
+		return (
+			suggests &&
+			suggests.map((suggest) => ({
+				value: suggest,
+				label: (
+					<div
+						style={{
+							display: 'flex',
+							justifyContent:
+								'space-between',
+						}}
+					>
+						<span>{suggest}</span>
+					</div>
+				),
+			}))
+		);
+	};
+
+	useEffect(() => {
+		if (typeof query === 'string' && query.length > 0) {
+			fetchGoods();
+		}
+	}, [searchParams]);
 
 	return (
 		<Layout className="container" style={layoutStyle}>
-			<Search
-				placeholder="검색어를 입력하세요"
-				enterButton="검색"
-				allowClear
-				size="large"
-				onSearch={onSearch}
+			<AutoComplete
 				style={{
 					width: '50%',
 					maxWidth: '600px',
 					marginTop: '50px',
 					marginBottom: '50px',
 				}}
-			/>
+				options={renderSuggests()}
+				onSelect={(value) => {
+					goSearchPage(value, 1);
+				}}
+				defaultActiveFirstOption={false}
+				onSearch={onTyping}
+			>
+				<Input.Search
+					placeholder="검색어를 입력하세요"
+					enterButton
+					defaultValue={query}
+					size="large"
+					onSearch={(value, event) => {
+						event.preventDefault();
+						goSearchPage(value, page);
+					}}
+					onPressEnter={(event) => {
+						event.preventDefault();
+						goSearchPage(
+							event.target.value,
+							page
+						);
+					}}
+					style={{
+						width: '100%',
+					}}
+				/>
+			</AutoComplete>
 			<GoodsList goodsList={goodsList} />
 			<Pagination
-				defaultCurrent={1}
+				defaultCurrent={page}
 				total={count}
-				onChange={onPageChange}
+				onChange={() => {
+					goSearchPage(query, page);
+				}}
 			/>
 		</Layout>
 	);
