@@ -114,7 +114,7 @@ const GoodsSearchView = () => {
 			<Pagination
 				defaultCurrent={page}
 				total={count}
-				onChange={() => {
+				onChange={(page) => {
 					goSearchPage(query, page);
 				}}
 			/>
