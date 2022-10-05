@@ -135,7 +135,7 @@ def create_category_table():
         CREATE TABLE `category` (
             `id` bigint NOT NULL AUTO_INCREMENT,
             `name` varchar(255) NOT NULL,
-            `parent_id` int DEFAULT NULL,
+            `parent_id` bigint DEFAULT NULL,
             `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
             `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             PRIMARY KEY (`id`)
