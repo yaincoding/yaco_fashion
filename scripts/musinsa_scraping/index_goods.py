@@ -5,18 +5,26 @@ import pymysql
 from elasticsearch import Elasticsearch, helpers, NotFoundError
 from tqdm import tqdm
 
+ES_HOST = os.environ.get('YACO_ES_HOST');
+ES_PORT = os.environ.get('YACO_ES_PORT');
+
+DB_HOST = os.environ.get('YACO_DB_HOST');
+DB_NAME = os.environ.get('YACO_DB_NAME');
+DB_USER = os.environ.get('YACO_DB_USER');
+DB_PASSWORD = os.environ.get('YACO_DB_PASSWORD');
+
 # mysql 연결
 mysql_conn = pymysql.connect(
-    host=os.environ.get("YACO_DB_HOST"),
-    user=os.environ.get("YACO_DB_USER"),
-    password=os.environ.get("YACO_DB_PASSWORD"),
+    host=DB_HOST,
+    user=DB_USER,
+    password=DB_PASSWORD,
     charset='utf8'
 )
 cursor = mysql_conn.cursor()
 
 # elasticsearch 연결
 es = Elasticsearch(
-    hosts=f"{os.environ.get('YACO_ES_HOST')}:{os.environ.get('YACO_ES_PORT')}",
+    hosts=f"{ES_HOST}:{ES_PORT}",
 )
 
 alias = 'goods'
@@ -153,7 +161,7 @@ def create_index():
 
 
 def index_data(new_index_name):
-    cursor.execute('USE yaco_fashion;')
+    cursor.execute(f'USE {DB_NAME};')
     cursor.execute(
         'SELECT id, title, category_id, image_url, click_count, sell_count, like_count, gender, hash_tags, price, link FROM goods;'
     )
