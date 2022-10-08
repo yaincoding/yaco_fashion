@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useSearchParams, useLocation } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
 import { Layout, Input, Pagination, AutoComplete } from 'antd';
 import axios from 'axios';
@@ -7,26 +7,24 @@ import GoodsList from '../../component/goods/GoodsList';
 import { useEffect } from 'react';
 
 const GoodsSearchView = () => {
+	const PAGE_SIZE = 10;
+
 	const [goodsList, setGoodsList] = useState([]);
 	const [count, setCount] = useState(0);
 	const [suggests, setSuggests] = useState([]);
 
 	let [searchParams, setSearchParams] = useSearchParams();
 
-	const query = searchParams.get('query');
-	const page = searchParams.get('page') || 1;
-
-	console.log(query, page);
-
-	const fetchGoods = async () => {
+	const fetchGoods = async (query, page) => {
 		await axios({
 			method: 'get',
 			url: '/api/goods/search',
-			params: { query: query, page: page },
+			params: { query: query, page: page, size: PAGE_SIZE },
 		})
 			.then((response) => {
 				setCount(response.data.count);
 				setGoodsList(response.data.docs);
+				console.log(`검색된 상품 수=${count}`);
 			})
 			.catch((error) => {
 				console.error(error);
@@ -74,11 +72,14 @@ const GoodsSearchView = () => {
 		);
 	};
 
+	const query = searchParams.get('query');
+	const page = searchParams.get('page');
+
 	useEffect(() => {
 		if (typeof query === 'string' && query.length > 0) {
-			fetchGoods();
+			fetchGoods(query, page);
 		}
-	}, [query, page, suggests]);
+	}, [searchParams]);
 
 	return (
 		<Layout className="container" style={layoutStyle}>
@@ -112,7 +113,7 @@ const GoodsSearchView = () => {
 			</AutoComplete>
 			<GoodsList goodsList={goodsList} />
 			<Pagination
-				defaultCurrent={page}
+				pageSize={PAGE_SIZE}
 				total={count}
 				onChange={(page) => {
 					goSearchPage(query, page);
