@@ -18,7 +18,7 @@ class GoodsSearchServiceImpl(
     private val documentParser: GoodsDocumentParser,
 ): GoodsSearchService {
 
-    override fun getById(id: Int): GoodsDocument {
+    override fun getById(id: Int): GoodsDocument? {
 
         val response: String? = webClient
             .get()
@@ -27,7 +27,11 @@ class GoodsSearchServiceImpl(
             .bodyToMono(String::class.java)
             .block()
 
-        return documentParser.parseGetGoodsResponse(response!!)
+        response?.let {
+            return documentParser.parseGetGoodsResponse(response)
+        }
+
+        return null
     }
 
     override fun search(requestDto: SearchGoodsRequestDto): SearchGoodsResponseDto {

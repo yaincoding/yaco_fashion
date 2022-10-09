@@ -1,5 +1,6 @@
 package com.yaincoding.yaco_fashion.search.goods.controller
 
+import com.yaincoding.yaco_fashion.search.goods.document.GoodsDocument
 import com.yaincoding.yaco_fashion.search.goods.dto.GetGoodsResponseDto
 import com.yaincoding.yaco_fashion.search.goods.dto.SearchGoodsRequestDto
 import com.yaincoding.yaco_fashion.search.goods.dto.SearchGoodsResponseDto
@@ -16,8 +17,9 @@ class GoodsSearchController (
 ) {
 
     @GetMapping("/{id}")
-    fun getById(@PathVariable id: Int): ResponseEntity<GetGoodsResponseDto> {
-        val response: GetGoodsResponseDto? = service.getById(id)
+    fun getById(@PathVariable id: Int): ResponseEntity<GoodsDocument> {
+        val response: GoodsDocument? = service.getById(id)
+
         response?.let {
             return ResponseEntity.ok(response)
         }
