@@ -1,25 +1,21 @@
 package com.yaincoding.yaco_fashion.admin.es_index.top_keyword.service
 
-import com.google.gson.FieldNamingPolicy
-import com.google.gson.GsonBuilder
-import com.google.gson.JsonObject
+import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.yaincoding.yaco_fashion.domain.top_keyword.entity.TopKeyword
 import com.yaincoding.yaco_fashion.domain.top_keyword.repository.TopKeywordRepository
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.http.*
 import org.springframework.stereotype.Service
-import org.springframework.web.client.HttpClientErrorException.NotFound
-import org.springframework.web.client.RestTemplate
+import org.springframework.web.reactive.function.client.WebClient
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
 @Service
 class TopKeywordIndexService(
-    @Value("\${elasticsearch.host}") private val host: String = "localhost",
-    @Value("\${elasticsearch.port}") private val port: Int = 9200,
     @Value("\${elasticsearch.index.top_keyword}") private val alias: String = "top_keyword",
-    private val restTemplate: RestTemplate,
+    private val objectMapper: ObjectMapper,
+    private val webClient: WebClient,
     private val topKeywordRepository: TopKeywordRepository,
 ) {
 
@@ -104,16 +100,14 @@ class TopKeywordIndexService(
         val formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss", Locale.KOREA).withZone(tz.toZoneId())
         val suffix: String = LocalDateTime.now().format(formatter)
         val newIndexName = "${alias}_${suffix}"
-        val url = "${host}:${port}/${newIndexName}"
 
-        val headers = HttpHeaders()
-        headers.contentType = MediaType.APPLICATION_JSON
-        val httpEntity: HttpEntity<String> = HttpEntity<String>(createIndexQuery, headers)
-        val responseEntity: ResponseEntity<String> = restTemplate.exchange(url, HttpMethod.PUT, httpEntity, String::class.java)
-
-        if (responseEntity.statusCode != HttpStatus.OK) {
-            throw Exception()
-        }
+        val response: String? = webClient
+            .put()
+            .uri("/${newIndexName}")
+            .bodyValue(createIndexQuery)
+            .retrieve()
+            .bodyToMono(String::class.java)
+            .block()
 
         return newIndexName
     }
@@ -121,13 +115,15 @@ class TopKeywordIndexService(
     private fun indexData(indexName: String) {
 
         fun bulkIndex(indexName: String, docs: List<String>) {
-            val url = "${host}:${port}/${indexName}/_bulk"
 
-            val headers = HttpHeaders()
-            headers.contentType = MediaType.APPLICATION_JSON
             val body: String = docs.joinToString("\n") + "\n"
-            val httpEntity: HttpEntity<String> = HttpEntity<String>(body, headers)
-            val responseEntity: ResponseEntity<String> = restTemplate.exchange(url, HttpMethod.POST, httpEntity, String::class.java)
+            webClient
+                .post()
+                .uri("${indexName}/_bulk")
+                .bodyValue(body)
+                .retrieve()
+                .bodyToMono(String::class.java)
+                .block()
         }
 
         val keywordList: List<TopKeyword> = topKeywordRepository.findAll().toList()
@@ -152,16 +148,16 @@ class TopKeywordIndexService(
 
     private fun switchAlias(newIndexName: String) {
 
-        val getAliasesUrl = "$host:$port/_alias/${alias}"
         val indices: MutableSet<String> = mutableSetOf()
-        try {
-            val getAliasResponse: String? = restTemplate.getForObject(getAliasesUrl, String::class.java)
-            val gson = GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create()
-            val jsonObject = gson.fromJson(getAliasResponse, JsonObject::class.java)
-            indices.addAll(jsonObject.keySet())
-        } catch (_: NotFound) {
+        val response: String? = webClient
+            .get()
+            .uri("/_alias/${alias}")
+            .retrieve()
+            .bodyToMono(String::class.java)
+            .block()
 
-        }
+        val obj: JsonNode = objectMapper.readTree(response)
+        obj.fieldNames().forEachRemaining { it -> indices.add(it) }
 
         val actions: MutableList<String> = mutableListOf()
         actions.add(
@@ -196,16 +192,21 @@ class TopKeywordIndexService(
             }
         """.trimIndent()
 
-        val switchAliasesUrl = "$host:$port/_aliases"
-        val headers = HttpHeaders()
-        headers.contentType = MediaType.APPLICATION_JSON
-        val httpEntity: HttpEntity<String> = HttpEntity<String>(body, headers)
-
-        val switchAliasResponse = restTemplate.postForObject(switchAliasesUrl, httpEntity, String::class.java)
+        webClient
+            .post()
+            .uri("/_aliases")
+            .bodyValue(body)
+            .retrieve()
+            .bodyToMono(String::class.java)
+            .block()
 
         for (index in indices) {
-            val deleteUrl = "$host:$port/$index"
-            restTemplate.delete(deleteUrl)
+            webClient
+                .delete()
+                .uri("/${index}")
+                .retrieve()
+                .bodyToMono(String::class.java)
+                .block()
         }
     }
 
