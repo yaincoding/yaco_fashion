@@ -2,10 +2,6 @@ package com.yaincoding.yaco_fashion.search.goods.document
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.google.gson.FieldNamingPolicy
-import com.google.gson.GsonBuilder
-import com.google.gson.JsonObject
-import com.yaincoding.yaco_fashion.search.goods.dto.GetGoodsResponseDto
 import com.yaincoding.yaco_fashion.search.goods.dto.SearchGoodsResponseDto
 import org.springframework.stereotype.Component
 
