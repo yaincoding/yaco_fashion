@@ -19,14 +19,16 @@ const GoodsCard = ({ goods }) => {
 			<div style={itemContainerStyle}>
 				<div>
 					<Image
-						src={goods.imageUrl}
+						src={goods['image_url']}
 						width="180px"
 						height="180px"
 						preview={false}
 					/>
 				</div>
 				<div style={goodsInfoContainerStyle}>
-					<b style={titleStyle}>{goods.title}</b>
+					<b style={titleStyle}>
+						{goods['title']}
+					</b>
 					<p style={metaDataStyle}>
 						{`${goods.price} 원`}
 					</p>
@@ -40,19 +42,31 @@ const GoodsCard = ({ goods }) => {
 						<IconText
 							icon={StarOutlined}
 							name="클릭"
-							text={goods.clickCount}
+							text={
+								goods[
+									'click_count'
+								]
+							}
 						/>
 						<Divider type="vertical" />
 						<IconText
 							icon={LikeOutlined}
 							name="찜"
-							text={goods.likeCount}
+							text={
+								goods[
+									'like_count'
+								]
+							}
 						/>
 						<Divider type="vertical" />
 						<IconText
 							icon={MessageOutlined}
 							name="판매량"
-							text={goods.sellCount}
+							text={
+								goods[
+									'sell_count'
+								]
+							}
 						/>
 					</div>
 				</div>

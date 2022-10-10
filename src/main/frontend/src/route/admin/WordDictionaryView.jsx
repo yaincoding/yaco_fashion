@@ -196,14 +196,14 @@ const WordDictionary = () => {
 		},
 		{
 			title: '생성',
-			dataIndex: 'createdAt',
-			key: 'createdAt',
+			dataIndex: 'created_at',
+			key: 'created_at',
 			render: (createdAt) => formatDateTime(createdAt),
 		},
 		{
 			title: '수정',
-			dataIndex: 'updatedAt',
-			key: 'updatedAt',
+			dataIndex: 'updated_at',
+			key: 'updated_at',
 			render: (updatedAt) => formatDateTime(updatedAt),
 		},
 		{
