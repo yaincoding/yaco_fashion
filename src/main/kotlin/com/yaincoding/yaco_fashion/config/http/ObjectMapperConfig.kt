@@ -14,6 +14,7 @@ class ObjectMapperConfig {
     fun objectMapper(): ObjectMapper {
         return Jackson2ObjectMapperBuilder()
             .propertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE)
+            .featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
             .build()
     }
 }
