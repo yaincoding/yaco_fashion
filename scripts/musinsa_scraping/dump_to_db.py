@@ -149,7 +149,7 @@ def create_goods_table():
             `id` bigint NOT NULL AUTO_INCREMENT,
             `title` varchar(255) DEFAULT NULL,
             `category_id` bigint NOT NULL DEFAULT 0,
-            `image_url` text,
+            `image_url` varchar(512),
             `click_count` int NOT NULL DEFAULT 0,
             `sell_count` int NOT NULL DEFAULT 0,
             `like_count` int NOT NULL DEFAULT 0,

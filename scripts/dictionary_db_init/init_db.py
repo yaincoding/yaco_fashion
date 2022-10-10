@@ -1,6 +1,9 @@
 import os
 import pymysql
 
+BUCKET_NAME = 'fashion-search'
+DB_NAME = os.environ.get("YACO_DB_NAME")
+
 mysql_conn = pymysql.connect(
     host=os.environ.get("YACO_DB_HOST"),
     user=os.environ.get("YACO_DB_USER"),
@@ -10,13 +13,13 @@ mysql_conn = pymysql.connect(
 
 cursor = mysql_conn.cursor()
 
-cursor.execute('USE yaco_fashion;')
+cursor.execute(f'USE {DB_NAME}')
 
 def create_word_table():
     cursor.execute('DROP TABLE IF EXISTS `es_word`;')
     sql = '''
         CREATE TABLE `es_word` (
-            `id` int NOT NULL AUTO_INCREMENT,
+            `id` bigint NOT NULL AUTO_INCREMENT,
             `word` varchar(31) NOT NULL,
             `expression` varchar(31),
             `active` boolean NOT NULL DEFAULT 1,
@@ -31,7 +34,7 @@ def create_synonym_table():
     cursor.execute('DROP TABLE IF EXISTS `es_synonym`;')
     sql = '''
         CREATE TABLE `es_synonym` (
-            `id` int NOT NULL AUTO_INCREMENT,
+            `id` bigint NOT NULL AUTO_INCREMENT,
             `word` varchar(31) NOT NULL,
             `synonym` varchar(31) NOT NULL,
             `active` boolean NOT NULL DEFAULT 1,
