@@ -8,11 +8,10 @@ import com.yaincoding.yaco_fashion.domain.user.domain.Role
 import com.yaincoding.yaco_fashion.domain.user.domain.User
 import com.yaincoding.yaco_fashion.domain.user.dto.GoogleIdTokenRequestDto
 import com.yaincoding.yaco_fashion.domain.user.dto.JwtDto
+import com.yaincoding.yaco_fashion.domain.user.dto.LoginResponseDto
 import com.yaincoding.yaco_fashion.domain.user.jwt.JwtProvider
 import com.yaincoding.yaco_fashion.domain.user.repository.UserRepository
-import org.springframework.security.oauth2.core.user.OAuth2User
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 import java.util.Collections
 
 @Service
@@ -21,7 +20,7 @@ class AuthService(
     private val jwtProvider: JwtProvider,
 ) {
 
-    fun loginOAuthGoogle(idTokenRequestDto: GoogleIdTokenRequestDto): JwtDto {
+    fun loginOAuthGoogle(idTokenRequestDto: GoogleIdTokenRequestDto): LoginResponseDto {
         val idTokenVerifier: GoogleIdTokenVerifier =
             GoogleIdTokenVerifier.Builder(NetHttpTransport(), GsonFactory())
                 .setAudience(Collections.singletonList(idTokenRequestDto.clientId))
@@ -36,7 +35,14 @@ class AuthService(
 
         saveOrUpdate(email = email, name = name, picture = picture)
 
-        return jwtProvider.generateJwtDto(email)
+        val jwtDto: JwtDto = jwtProvider.generateJwtDto(email)
+
+        return LoginResponseDto(
+            name = name,
+            picture = picture,
+            accessToken = jwtDto.accessToken,
+            refreshToken = jwtDto.refreshToken,
+        )
     }
 
     private fun saveOrUpdate(email: String, name: String, picture: String) {
