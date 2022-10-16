@@ -1,7 +1,8 @@
 import { BookOutlined, ToolOutlined } from '@ant-design/icons';
-import { Layout, Menu } from 'antd';
-import React from 'react';
-import { Link } from 'react-router-dom';
+import { Layout, Menu, Avatar, Comment, Button } from 'antd';
+import React, { useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { UserContext } from '../context/auth/UserContextProvider';
 
 const { Sider } = Layout;
 
@@ -36,15 +37,60 @@ const items = [
 });
 
 const Navigation = () => {
+	const { user } = useContext(UserContext);
+	const navigate = useNavigate();
+
+	const logout = () => {
+		window.sessionStorage.removeItem('user');
+		window.sessionStorage.removeItem('access_token');
+		window.sessionStorage.removeItem('refresh_token');
+		navigate('/login');
+	};
+
 	return (
 		<Sider width={200} className="site-layout-background">
+			<div
+				style={{
+					display: 'flex',
+					flexDirection: 'column',
+					height: '10%',
+					backgroundColor: '#ffffff',
+					paddingBottom: '10px',
+				}}
+			>
+				<Comment
+					avatar={
+						<Avatar
+							src={user.picture}
+							size="large"
+						/>
+					}
+					author={user.name}
+					style={{
+						margin: '0 16px',
+						backgroundColor: '#ffffff',
+					}}
+				/>
+				<Button
+					size="small"
+					style={{
+						margin: '0 16px',
+						verticalAlign: 'middle',
+						backgroundColor: '#efefef',
+					}}
+					onClick={logout}
+				>
+					로그아웃
+				</Button>
+			</div>
 			<Menu
 				mode="inline"
 				defaultOpenKeys={['sub1', 'sub2']}
 				defaultSelectedKeys={['1']}
 				style={{
-					height: '100%',
+					height: '90%',
 					borderRight: 0,
+					paddingTop: '10px',
 				}}
 				items={items}
 			/>
