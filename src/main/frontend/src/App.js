@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import UserContextProvider from './context/auth/UserContextProvider';
 import Login from './route/login/Login';
+import Logout from './route/login/Logout';
 import Main from './route/Main';
 
 const App = () => (
@@ -10,6 +11,7 @@ const App = () => (
 		<UserContextProvider>
 			<Routes>
 				<Route path="/login" element={<Login />} />
+				<Route path="/logout" element={<Logout />} />
 				<Route path="/*" element={<Main />} />
 			</Routes>
 		</UserContextProvider>

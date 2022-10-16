@@ -1,5 +1,8 @@
 package com.yaincoding.yaco_fashion.domain.user.jwt
 
+import io.jsonwebtoken.ExpiredJwtException
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpStatus
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.util.StringUtils
 import org.springframework.web.filter.OncePerRequestFilter
@@ -15,11 +18,18 @@ class JwtFilter(
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
-        val jwt = jwtProvider.resolveToken(request)
+        val bearerToken: String? = request.getHeader(HttpHeaders.AUTHORIZATION)
 
-        if (StringUtils.hasText(jwt) && jwtProvider.validateAccessToken(jwt)) {
-            val authentication = jwtProvider.findAuthentication(jwt)
-            SecurityContextHolder.getContext().authentication = authentication
+        bearerToken?.let {
+            val jwt = jwtProvider.resolveToken(bearerToken)
+            try {
+                if (StringUtils.hasText(jwt) && jwtProvider.validateAccessToken(jwt)) {
+                    val authentication = jwtProvider.getAuthentication(jwt)
+                    SecurityContextHolder.getContext().authentication = authentication
+                }
+            } catch (e: ExpiredJwtException) {
+                response.sendError(HttpStatus.UNAUTHORIZED.value())
+            }
         }
 
         filterChain.doFilter(request, response)

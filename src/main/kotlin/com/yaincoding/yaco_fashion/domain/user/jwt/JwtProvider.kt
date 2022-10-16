@@ -6,7 +6,6 @@ import com.yaincoding.yaco_fashion.domain.user.repository.UserRepository
 import io.jsonwebtoken.*
 import io.jsonwebtoken.io.Decoders
 import io.jsonwebtoken.security.Keys
-import org.springframework.http.HttpHeaders
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.authority.SimpleGrantedAuthority
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Component
 import org.springframework.util.StringUtils
 import java.security.Key
 import java.util.*
-import javax.servlet.http.HttpServletRequest
 
 @Component
 class JwtProvider(
@@ -61,10 +59,8 @@ class JwtProvider(
         )
     }
 
-    fun resolveToken(request: HttpServletRequest): String {
-        val bearerToken = request.getHeader(HttpHeaders.AUTHORIZATION)
-
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(AccessTokenType.BEARER.value)) {
+    fun resolveToken(bearerToken: String): String {
+        if (StringUtils.hasText(bearerToken) && bearerToken.lowercase().startsWith(AccessTokenType.BEARER.value.lowercase())) {
             return bearerToken.substring(7)
         }
 
@@ -80,9 +76,6 @@ class JwtProvider(
         } catch (e: MalformedJwtException) {
             println("올바르지 못한 토큰입니다.")
             return false
-        } catch (e: ExpiredJwtException) {
-            println("만료된 토큰입니다.")
-            return false
         } catch (e: UnsupportedJwtException) {
             println("지원되지 않는 토큰입니다.")
             return false
@@ -93,7 +86,7 @@ class JwtProvider(
         return true
     }
 
-    fun findAuthentication(accessToken: String): Authentication {
+    fun getAuthentication(accessToken: String): Authentication {
         val claims = parseClaims(accessToken)
 
         val authorities = mutableListOf(claims[AUTHORITIES_KEY] as String).map { role -> SimpleGrantedAuthority(role) }

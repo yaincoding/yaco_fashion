@@ -40,13 +40,6 @@ const Navigation = () => {
 	const { user } = useContext(UserContext);
 	const navigate = useNavigate();
 
-	const logout = () => {
-		window.sessionStorage.removeItem('user');
-		window.sessionStorage.removeItem('access_token');
-		window.sessionStorage.removeItem('refresh_token');
-		navigate('/login');
-	};
-
 	return (
 		<Sider width={200} className="site-layout-background">
 			<div
@@ -78,7 +71,9 @@ const Navigation = () => {
 						verticalAlign: 'middle',
 						backgroundColor: '#efefef',
 					}}
-					onClick={logout}
+					onClick={() => {
+						navigate('/logout');
+					}}
 				>
 					로그아웃
 				</Button>
