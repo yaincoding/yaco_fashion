@@ -4,6 +4,8 @@ services:
     container_name: yaco_fashion
     build:
       context: .
+      args:
+        REACT_APP_GOOGLE_CLIENT_ID: ${REACT_APP_GOOGLE_CLIENT_ID}
     env_file:
       - .env
     expose:
@@ -22,6 +24,13 @@ services:
     restart: on-failure
     networks:
       - yaco_net
+
+  certbot:
+    image: certbot/certbot
+    restart: unless-stopped
+    volumes:
+      - ./nginx/data/certbot/conf:/etc/letsencrypt
+      - ./nginx/data/certbot/www:/var/www/certbot
 
 networks:
   yaco_net:

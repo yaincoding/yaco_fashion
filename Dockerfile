@@ -6,6 +6,8 @@ RUN apt-get install curl --yes
 RUN curl -sL https://deb.nodesource.com/setup_18.x | bash -
 RUN apt-get -y install nodejs --yes
 
+ARG REACT_APP_GOOGLE_CLIENT_ID
+
 COPY . /yaco_fashion
 
 WORKDIR /yaco_fashion
