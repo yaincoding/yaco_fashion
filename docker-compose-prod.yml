@@ -14,9 +14,8 @@ services:
       - yaco_net
 
   nginx:
+    image: nginx:latest
     container_name: nginx
-    build:
-      context: ./nginx
     ports:
       - "80:80"
       - "443:443"
