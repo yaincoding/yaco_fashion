@@ -13,10 +13,9 @@ import java.time.Duration
 
 @Configuration
 class EsWebClientConfig(
-    @Value("\${elasticsearch.host}") private val host: String = "localhost",
-    @Value("\${elasticsearch.port}") private val port: Int = 9200,
+    @Value("\${elasticsearch.host}") private val host: String,
+    @Value("\${elasticsearch.port}") private val port: String
 ) {
-
     @Bean
     fun webClient(): WebClient {
 
@@ -30,4 +29,5 @@ class EsWebClientConfig(
             .clientConnector(ReactorClientHttpConnector(httpClient))
             .build()
     }
+
 }

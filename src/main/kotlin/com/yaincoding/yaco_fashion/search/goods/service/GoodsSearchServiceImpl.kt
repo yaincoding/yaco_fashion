@@ -13,7 +13,7 @@ import org.springframework.web.reactive.function.client.WebClient
 
 @Service
 class GoodsSearchServiceImpl(
-    @Value("\${elasticsearch.index.goods}") private val goodsIndex: String = "goods",
+    @Value("\${elasticsearch.index.goods}") private val goodsIndex: String,
     private val webClient: WebClient,
     private val documentParser: GoodsDocumentParser,
 ): GoodsSearchService {
