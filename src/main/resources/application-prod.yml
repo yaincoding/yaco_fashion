@@ -15,6 +15,6 @@ spring:
 dictionary:
   s3_bucket_name: yaco-es-dictionary
   words:
-    s3_key: prod/words.txt
+    s3_prefix: prod
   synonyms:
-    s3_key: prod/synonyms.txt
+    s3_prefix: prod

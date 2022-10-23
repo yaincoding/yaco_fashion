@@ -4,6 +4,7 @@ import { Layout } from 'antd';
 import GoodsSearchView from './goods/GoodsSearchView';
 import WordDictionaryView from './admin/WordDictionaryView';
 import SynonymDictionaryView from './admin/SynonymDictionaryView';
+import AnalyzeView from './admin/AnalyzeView';
 import AppNavigation from '../component/AppNavigation';
 import { useEffect } from 'react';
 import axios from 'axios';
@@ -101,6 +102,13 @@ const Main = () => {
 							path="/admin/dictionary/synonym"
 							element={
 								<SynonymDictionaryView />
+							}
+							exact
+						/>
+						<Route
+							path="/admin/dictionary/analyze"
+							element={
+								<AnalyzeView />
 							}
 							exact
 						/>

@@ -11,13 +11,16 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 @Service
 class EsWordService(
     private val repository: EsWordRepository,
     private val s3: AmazonS3,
     @Value("\${dictionary.s3_bucket_name}") private val s3BucketName: String,
-    @Value("\${dictionary.words.s3_key}") private val s3Key: String,
+    @Value("\${dictionary.words.s3_prefix}") private val s3Prefix: String,
 ) {
     fun list(page: Int, size: Int): EsWordListDto {
         val pageable: Pageable = PageRequest.of(page, size, Sort.Direction.DESC, "id")
@@ -65,12 +68,20 @@ class EsWordService(
         repository.deleteById(id)
     }
 
-    fun uploadToS3(content: String): Boolean {
-        return try {
-            s3.putObject(s3BucketName, s3Key, content)
-            true
-        } catch(e: Exception) {
-            false
+    fun uploadToS3() {
+
+        val esWords: List<EsWord> = repository.findAll().toList()
+        val words: MutableList<String> = mutableListOf()
+        for (esWord in esWords) {
+            words.add(esWord.expression?.let { "${esWord.word!!} $it" } ?: esWord.word!!)
         }
+
+        val content: String = words.joinToString("\n")
+
+        val tz: TimeZone = TimeZone.getTimeZone("Asia/Seoul")
+        val formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss", Locale.KOREA).withZone(tz.toZoneId())
+        val suffix: String = LocalDateTime.now().format(formatter)
+
+        s3.putObject(s3BucketName, "${s3Prefix}/user_dictionary_${suffix}.txt", content)
     }
 }

@@ -19,7 +19,10 @@ class EsSynonym (
     var synonym: String? = null,
 
     @Column(name = "active", nullable = false)
-    var active: Boolean = true
+    var active: Boolean = true,
+
+    @Column(name = "bidirect", nullable = false)
+    var bidirect: Boolean = true,
 
 ): BaseTime() {
 

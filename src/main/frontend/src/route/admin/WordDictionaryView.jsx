@@ -135,15 +135,15 @@ const WordDictionary = () => {
 		setLoading(true);
 		axios({
 			method: 'get',
-			url: '/api/es_word/apply',
+			url: '/api/es_word/upload_file',
 		})
 			.then((response) => {
 				setLoading(false);
-				alert('색인에 적용되었습니다.');
+				alert('성공');
 			})
 			.catch((error) => {
 				setLoading(false);
-				alert('색인에 적용 실패!');
+				alert('실패');
 				console.log(error);
 			});
 	};
@@ -326,7 +326,7 @@ const WordDictionary = () => {
 					}}
 					loading={loading}
 				>
-					색인에 적용
+					s3에 저장
 				</Button>
 			</div>
 			<div className="container" style={tableContainerStyle}>

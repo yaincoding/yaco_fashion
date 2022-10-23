@@ -18,6 +18,10 @@ const items = [
 		children: [
 			{ subTitle: '단어', to: '/admin/dictionary/word' },
 			{ subTitle: '동의어', to: '/admin/dictionary/synonym' },
+			{
+				subTitle: '형태소 분석',
+				to: '/admin/dictionary/analyze',
+			},
 		],
 	},
 ].map(({ icon, title, children }, index) => {

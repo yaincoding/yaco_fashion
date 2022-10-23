@@ -24,7 +24,7 @@ cursor = mysql_conn.cursor()
 
 # elasticsearch 연결
 es = Elasticsearch(
-    hosts=f"{ES_HOST}:{ES_PORT}",
+    hosts=f"http://{ES_HOST}:{ES_PORT}",
 )
 
 alias = 'goods'
@@ -53,7 +53,8 @@ def create_index():
             "filter": {
                 "synonym_filter": {
                     "type": "synonym_graph",
-                    "synonyms_path": "synonyms.txt"
+                    "synonyms_path": "synonyms.txt",
+                    "updatable": True,
                 }
             },
             "analyzer": {

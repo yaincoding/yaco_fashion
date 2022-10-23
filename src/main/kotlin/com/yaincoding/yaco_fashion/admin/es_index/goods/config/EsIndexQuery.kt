@@ -29,7 +29,8 @@ enum class EsIndexQuery (
                         "filter": {
                             "synonym_filter": {
                                 "type": "synonym_graph",
-                                "synonyms_path": "synonyms.txt"
+                                "synonyms_path": "synonyms.txt",
+                                "updatable": true,
                             }
                         },
                         "analyzer": {

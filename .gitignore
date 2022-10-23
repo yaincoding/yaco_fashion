@@ -50,5 +50,7 @@ elasticsearch/indices
 elasticsearch/snapshot_cache
 elasticsearch/node.lock
 elasticsearch/nodes
+elasticsearch/config/synonyms.txt
+elasticsearch/config/*dictionary*
 
 .env*

@@ -85,6 +85,7 @@ const SynonymDictionaryView = () => {
 				word: word,
 				synonym: synonym,
 				active: active,
+				bidirect: bidirect,
 			},
 		})
 			.then((response) => {
@@ -94,28 +95,9 @@ const SynonymDictionaryView = () => {
 			.catch((error) => {
 				console.error(error);
 			});
-
-		if (bidirect) {
-			axios({
-				method: 'post',
-				url: '/api/es_synonym/save',
-				data: {
-					word: synonym,
-					synonym: word,
-					active: active,
-				},
-			})
-				.then((response) => {
-					console.log(response);
-					window.location.reload();
-				})
-				.catch((error) => {
-					console.error(error);
-				});
-		}
 	};
 
-	const update = ({ id, word, synonym, active }) => {
+	const update = ({ id, word, synonym, active, bidirect }) => {
 		axios({
 			method: 'put',
 			url: `/api/es_synonym/update/${id}`,
@@ -123,6 +105,7 @@ const SynonymDictionaryView = () => {
 				word: word,
 				synonym: synonym,
 				active: active,
+				bidirect: bidirect,
 			},
 		})
 			.then((response) => {
@@ -167,15 +150,15 @@ const SynonymDictionaryView = () => {
 		setLoading(true);
 		axios({
 			method: 'get',
-			url: '/api/es_synonym/apply',
+			url: '/api/es_synonym/upload_file',
 		})
 			.then((response) => {
 				setLoading(false);
-				alert('색인에 적용되었습니다.');
+				alert('성공');
 			})
 			.catch((error) => {
 				setLoading(false);
-				alert('색인에 적용 실패!');
+				alert('실패');
 				console.error(error);
 			});
 	};
@@ -239,7 +222,7 @@ const SynonymDictionaryView = () => {
 			render: (updatedAt) => formatDateTime(updatedAt),
 		},
 		{
-			title: 'ON/OFF',
+			title: '활성',
 			dataIndex: 'active',
 			key: 'active',
 			render: (active) => <Switch defaultChecked={active} />,
@@ -249,6 +232,24 @@ const SynonymDictionaryView = () => {
 						update({
 							id: record.id,
 							active: !record.active,
+						});
+					},
+				};
+			},
+		},
+		{
+			title: '양방향',
+			dataIndex: 'bidirect',
+			key: 'bidirect',
+			render: (bidirect) => (
+				<Switch defaultChecked={bidirect} />
+			),
+			onCell: (record) => {
+				return {
+					onClick: (e) => {
+						update({
+							id: record.id,
+							bidirect: !record.bidirect,
 						});
 					},
 				};
@@ -288,13 +289,18 @@ const SynonymDictionaryView = () => {
 					form={form}
 					initialValues={{
 						layout: 'inline',
+						bidirect: true,
 					}}
-					onFinish={(values) => {
+					onFinish={({
+						word,
+						synonym,
+						bidirect,
+					}) => {
 						save({
-							word: values.word,
-							synonym: values.synonym,
+							word: word,
+							synonym: synonym,
 							active: true,
-							bidirect: values.bidirect,
+							bidirect: bidirect,
 						});
 					}}
 				>
@@ -369,7 +375,7 @@ const SynonymDictionaryView = () => {
 					}}
 					loading={loading}
 				>
-					색인에 적용
+					s3에 저장
 				</Button>
 			</div>
 			<div className="container" style={tableContainerStyle}>

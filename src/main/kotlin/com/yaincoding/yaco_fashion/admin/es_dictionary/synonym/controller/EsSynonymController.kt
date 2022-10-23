@@ -57,4 +57,10 @@ class EsSynonymController(
         service.delete(id)
         return ResponseEntity(HttpStatus.OK)
     }
+
+    @GetMapping("/upload_file")
+    fun uploadFile(): ResponseEntity<HttpStatus> {
+        service.uploadToS3()
+        return ResponseEntity(HttpStatus.OK)
+    }
 }
