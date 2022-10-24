@@ -38,6 +38,7 @@ def create_synonym_table():
             `word` varchar(31) NOT NULL,
             `synonym` varchar(31) NOT NULL,
             `active` boolean NOT NULL DEFAULT 1,
+            `bidirect` boolean NOT NULL DEFAULT 1,
             `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
             `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             PRIMARY KEY (`id`)
